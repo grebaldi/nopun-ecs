@@ -6,9 +6,6 @@ import { Entity } from "./Entity";
 export class Scene {
 	private parent: Scene | null = null;
 
-	private constructor() {}
-	public static create(): Scene { return new Scene(); }
-
 	public readonly debug = (() => {
 		const self = this;
 

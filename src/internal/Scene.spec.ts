@@ -4,8 +4,8 @@ import { Entity } from "./Entity";
 
 describe(`Scene > Scene Graph Management`, () => {
 	it(`should allow for child scenes to be added.`, () => {
-		const parentScene = Scene.create();
-		const childScene = Scene.create();
+		const parentScene = new Scene();
+		const childScene = new Scene();
 
 		expect((parentScene as any).scenesStore.size).toBe(0);
 		expect((childScene as any).scenesStore.size).toBe(0);
@@ -19,8 +19,8 @@ describe(`Scene > Scene Graph Management`, () => {
 	});
 
 	it(`should allow for child scenes to be removed.`, () => {
-		const parentScene = Scene.create();
-		const childScene = Scene.create();
+		const parentScene = new Scene();
+		const childScene = new Scene();
 
 		parentScene.scenes.attach(childScene);
 
@@ -36,8 +36,8 @@ describe(`Scene > Scene Graph Management`, () => {
 	});
 
 	it(`should prevent duplicate child scenes from being added`, () => {
-		const parentScene = Scene.create();
-		const childScene = Scene.create();
+		const parentScene = new Scene();
+		const childScene = new Scene();
 
 		parentScene.scenes.attach(childScene);
 
@@ -51,8 +51,8 @@ describe(`Scene > Scene Graph Management`, () => {
 	});
 
 	it(`should prevent unknown child scenes from being removed`, () => {
-		const parentScene = Scene.create();
-		const childScene = Scene.create();
+		const parentScene = new Scene();
+		const childScene = new Scene();
 
 		expect(() => parentScene.scenes.detach(childScene))
 			.toThrowError(
@@ -64,9 +64,9 @@ describe(`Scene > Scene Graph Management`, () => {
 	});
 
 	it(`should prevent circular references`, () => {
-		const parentScene = Scene.create();
-		const childScene = Scene.create();
-		const grandchildScene = Scene.create();
+		const parentScene = new Scene();
+		const childScene = new Scene();
+		const grandchildScene = new Scene();
 
 		parentScene.scenes.attach(childScene);
 		childScene.scenes.attach(grandchildScene);
@@ -89,7 +89,7 @@ describe(`Scene > Scene Graph Management`, () => {
 	});
 
 	it(`should prevent scene from being added to itself.`, () => {
-		const scene = Scene.create();
+		const scene = new Scene();
 
 		expect(() => scene.scenes.attach(scene))
 			.toThrowError(
@@ -98,9 +98,9 @@ describe(`Scene > Scene Graph Management`, () => {
 	});
 
 	it(`should prevent children from being added that already have a parent.`, () => {
-		const parentScene = Scene.create();
-		const childScene = Scene.create();
-		const grandchildScene = Scene.create();
+		const parentScene = new Scene();
+		const childScene = new Scene();
+		const grandchildScene = new Scene();
 
 		parentScene.scenes.attach(childScene);
 		childScene.scenes.attach(grandchildScene);
@@ -115,9 +115,9 @@ describe(`Scene > Scene Graph Management`, () => {
 	});
 
 	it(`should allow for grand child scenes to be added to child scenes`, () => {
-		const parentScene = Scene.create();
-		const childScene = Scene.create();
-		const grandchildScene = Scene.create();
+		const parentScene = new Scene();
+		const childScene = new Scene();
+		const grandchildScene = new Scene();
 
 		parentScene.scenes.attach(childScene);
 
@@ -132,9 +132,9 @@ describe(`Scene > Scene Graph Management`, () => {
 	});
 
 	it(`should execute all known child scenes along with its own execution`, () => {
-		const parentScene = Scene.create();
+		const parentScene = new Scene();
 		const childScenes = Array(3).fill(null).map(_ => {
-			const scene = Scene.create() as any;
+			const scene = new Scene() as any;
 
 			scene.execute = jest.fn();
 
@@ -181,7 +181,7 @@ describe(`Scene > Resource Management`, () => {
 	it(`should allow for resources to be added.`, () => {
 		class DummyResource1 { property = 'foo' }
 		class DummyResource2 { property = 'fuu' }
-		const scene = Scene.create();
+		const scene = new Scene();
 
 		expect(scene.resources.add(DummyResource1))
 			.toMatchObject({ property: 'foo' });
@@ -199,7 +199,7 @@ describe(`Scene > Resource Management`, () => {
 	it(`should allow for resources to be removed.`, () => {
 		class DummyResource1 { property = 'foo' }
 		class DummyResource2 { property = 'fuu' }
-		const scene = Scene.create();
+		const scene = new Scene();
 
 		scene.resources.add(DummyResource1);
 		scene.resources.add(DummyResource2);
@@ -232,7 +232,7 @@ describe(`Scene > Resource Management`, () => {
 
 	it(`should prevent duplicate resources from being added`, () => {
 		class DummyResource { property = 'foo' }
-		const scene = Scene.create();
+		const scene = new Scene();
 
 		scene.resources.add(DummyResource);
 
@@ -247,7 +247,7 @@ describe(`Scene > Resource Management`, () => {
 
 	it(`should prevent unknown resources from being removed`, () => {
 		class DummyResource { property = 'foo' }
-		const scene = Scene.create();
+		const scene = new Scene();
 
 		expect(() => scene.resources.remove(DummyResource))
 			.toThrowError(
@@ -262,7 +262,7 @@ describe(`Scene > Resource Management`, () => {
 describe(`Scene > Systems Management`, () => {
 	it(`should allow for systems to be registered.`, () => {
 		class DummySystem extends System { execute: () => {} }
-		const scene = Scene.create();
+		const scene = new Scene();
 
 		expect(() => scene.systems.register(DummySystem))
 			.not.toThrow();
@@ -272,7 +272,7 @@ describe(`Scene > Systems Management`, () => {
 
 	it(`should allow for systems to be removed.`, () => {
 		class DummySystem extends System { execute: () => {} }
-		const scene = Scene.create();
+		const scene = new Scene();
 
 		scene.systems.register(DummySystem);
 
@@ -286,7 +286,7 @@ describe(`Scene > Systems Management`, () => {
 
 	it(`should prevent duplicate systems from being added`, () => {
 		class DummySystem extends System { execute: () => {} }
-		const scene = Scene.create();
+		const scene = new Scene();
 
 		scene.systems.register(DummySystem);
 
@@ -298,7 +298,7 @@ describe(`Scene > Systems Management`, () => {
 
 	it(`should prevent unknown systems from being removed`, () => {
 		class DummySystem extends System { execute: () => {} }
-		const scene = Scene.create();
+		const scene = new Scene();
 
 		expect(() => scene.systems.unregister(DummySystem))
 			.toThrowError(
@@ -310,7 +310,7 @@ describe(`Scene > Systems Management`, () => {
 		class DummySystem1 extends System { execute = jest.fn() }
 		class DummySystem2 extends System { execute = jest.fn() }
 		class DummySystem3 extends System { execute = jest.fn() }
-		const scene = Scene.create();
+		const scene = new Scene();
 
 		scene.systems.register(DummySystem1);
 		scene.systems.register(DummySystem2);
@@ -362,7 +362,7 @@ describe(`Scene > Systems Management`, () => {
 
 describe(`Scene > Entity Management`, () => {
 	it(`creates entities.`, () => {
-		const scene = Scene.create();
+		const scene = new Scene();
 		const entity = scene.entities.create();
 
 		expect(entity).not.toBe(null);
@@ -372,7 +372,7 @@ describe(`Scene > Entity Management`, () => {
 	});
 
 	it(`destroys entities.`, () => {
-		const scene = Scene.create();
+		const scene = new Scene();
 		const entity = scene.entities.create();
 
 		expect(() => scene.entities.destroy(entity))
@@ -383,8 +383,8 @@ describe(`Scene > Entity Management`, () => {
 	});
 
 	it(`prevents unknown entities from being destroyed.`, () => {
-		const scene1 = Scene.create();
-		const scene2 = Scene.create();
+		const scene1 = new Scene();
+		const scene2 = new Scene();
 		const entity = scene2.entities.create();
 
 		expect(() => scene1.entities.destroy(entity))
@@ -420,7 +420,7 @@ describe(`Scene > Entity Management`, () => {
 				}
 			}
 		}
-		const scene = Scene.create();
+		const scene = new Scene();
 		const entity1 = scene.entities.create();
 		const entity2 = scene.entities.create();
 

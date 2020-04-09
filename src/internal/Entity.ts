@@ -4,6 +4,17 @@ export interface IUpdateQueue {
 	queueForUpdate: (entity: Entity) => any
 }
 
+export interface IComponentAdder {
+	add: <C extends Component>(
+		CC: ComponentConstructor<C>,
+		initialValue?: Partial<C>
+	) => IComponentAdder
+}
+
+export interface IComponentRemover {
+	remove: (CC: ComponentConstructor) => IComponentRemover
+}
+
 export class Entity {
 	constructor(
 		private readonly updateQueue: IUpdateQueue
@@ -18,7 +29,7 @@ export class Entity {
 		function add<C extends Component>(
 			CC: ComponentConstructor<C>,
 			initialValue: Partial<C> = {}
-		): { add: typeof add  } {
+		): IComponentAdder {
 			if (store.has(CC))
 				throw new AttemptToAssignDuplicateComponent(entity, CC);
 
@@ -32,7 +43,7 @@ export class Entity {
 
 		function remove(
 			CC: ComponentConstructor
-		): { remove: typeof remove } {
+		): IComponentRemover {
 			if (!store.has(CC))
 				throw new AttemptToRemoveUnassignedComponent(entity, CC);
 

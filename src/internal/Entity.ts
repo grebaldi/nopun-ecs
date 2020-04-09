@@ -16,55 +16,45 @@ export interface IComponentRemover {
 }
 
 export class Entity {
+	private readonly componentsStore = new Map<ComponentConstructor, Component>();
 	constructor(
 		private readonly updateQueue: IUpdateQueue
 	) {}
 
-	public readonly components = (() => {
-		const entity = this;
-		const store = new Map<ComponentConstructor, Component>();
-		const adder = { add };
-		const remover = { remove };
+	public add<C extends Component>(
+		CC: ComponentConstructor<C>,
+		initialValue: Partial<C> = {}
+	): this {
+		if (this.componentsStore.has(CC))
+			throw new AttemptToAssignDuplicateComponent(this, CC);
 
-		function add<C extends Component>(
-			CC: ComponentConstructor<C>,
-			initialValue: Partial<C> = {}
-		): IComponentAdder {
-			if (store.has(CC))
-				throw new AttemptToAssignDuplicateComponent(entity, CC);
+		const component = new CC();
+		Object.assign(component, initialValue);
+		this.componentsStore.set(CC, component);
+		this.updateQueue.queueForUpdate(this);
 
-			const component = new CC();
-            Object.assign(component, initialValue);
-			store.set(CC, component);
-			entity.updateQueue.queueForUpdate(entity);
+		return this;
+	}
 
-			return adder;
-		}
+	public remove(CC: ComponentConstructor): this {
+		if (!this.componentsStore.has(CC))
+			throw new AttemptToRemoveUnassignedComponent(this, CC);
 
-		function remove(
-			CC: ComponentConstructor
-		): IComponentRemover {
-			if (!store.has(CC))
-				throw new AttemptToRemoveUnassignedComponent(entity, CC);
+		this.componentsStore.delete(CC);
+		this.updateQueue.queueForUpdate(this);
+		return this;
+	}
 
-			store.delete(CC);
-			entity.updateQueue.queueForUpdate(entity);
-			return remover;
-		}
+	public has(CC: ComponentConstructor): boolean {
+		return this.componentsStore.has(CC);
+	}
 
-		function has(CC: ComponentConstructor): boolean {
-			return store.has(CC);
-		}
+	public get<C extends Component>(CC: ComponentConstructor<C>): C {
+		if (!this.componentsStore.has(CC))
+			throw new AttemptToGetUnassignedComponent(this, CC);
 
-		function get<C extends Component>(CC: ComponentConstructor<C>): C {
-			if (!store.has(CC))
-				throw new AttemptToGetUnassignedComponent(entity, CC);
-
-			return store.get(CC) as C;
-		}
-
-		return { add, remove, has, get };
-	})();
+		return this.componentsStore.get(CC) as C;
+	}
 }
 
 export class EntityError extends Error {

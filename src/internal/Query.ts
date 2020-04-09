@@ -22,12 +22,9 @@ export class Query {
 	public matches(entity: Entity): boolean {
 		return this.filter.every(f => {
 			if (f instanceof Negation) {
-				return !entity.components.has(f.subject);
+				return !entity.has(f.subject);
 			} else {
-				if (!entity.components)
-					console.error(entity);
-
-				return entity.components.has(f);
+				return entity.has(f);
 			}
 		});
 	}

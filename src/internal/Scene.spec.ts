@@ -438,8 +438,8 @@ describe(`Scene > Entity Management`, () => {
 		scene.systems.register(DummySystem1);
 		scene.systems.register(DummySystem2);
 
-		entity1.components.add(DummyComponent1);
-		entity2.components.add(DummyComponent2);
+		entity1.add(DummyComponent1);
+		entity2.add(DummyComponent2);
 
 		scene.execute(.00161);
 
@@ -449,7 +449,7 @@ describe(`Scene > Entity Management`, () => {
 		expect(check2).toHaveBeenCalledTimes(1);
 		expect(check2).toHaveBeenLastCalledWith(.00161, entity2);
 
-		entity1.components.add(DummyComponent2);
+		entity1.add(DummyComponent2);
 		scene.execute(.00162);
 
 		expect(check1).toHaveBeenCalledTimes(2);
@@ -458,8 +458,8 @@ describe(`Scene > Entity Management`, () => {
 		expect(check2).toHaveBeenCalledTimes(3);
 		expect(check2).toHaveBeenLastCalledWith(.00162, entity1);
 
-		entity1.components.remove(DummyComponent2);
-		entity2.components.remove(DummyComponent2);
+		entity1.remove(DummyComponent2);
+		entity2.remove(DummyComponent2);
 		scene.execute(.00163);
 
 		expect(check1).toHaveBeenCalledTimes(3);
@@ -468,7 +468,7 @@ describe(`Scene > Entity Management`, () => {
 		expect(check2).toHaveBeenCalledTimes(3);
 		expect(check2).toHaveBeenLastCalledWith(.00162, entity1);
 
-		entity2.components.add(DummyComponent2);
+		entity2.add(DummyComponent2);
 		scene.execute(.00164);
 
 		expect(check1).toHaveBeenCalledTimes(4);

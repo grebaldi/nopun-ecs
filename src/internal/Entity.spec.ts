@@ -6,10 +6,10 @@ describe('Entity', () => {
 		const updateQueue = { queueForUpdate: () => {} }
 		const entity = new Entity(updateQueue);
 
-		entity.components.add(DummyComponent);
+		entity.add(DummyComponent);
 
-		expect(entity.components.has(DummyComponent)).toBe(true);
-		expect(entity.components.get(DummyComponent)).toBeInstanceOf(DummyComponent);
+		expect(entity.has(DummyComponent)).toBe(true);
+		expect(entity.get(DummyComponent)).toBeInstanceOf(DummyComponent);
 	});
 
 	it(`allows for components to be removed.`, () => {
@@ -17,11 +17,11 @@ describe('Entity', () => {
 		const updateQueue = { queueForUpdate: () => {} }
 		const entity = new Entity(updateQueue);
 
-		entity.components.add(DummyComponent);
-		entity.components.remove(DummyComponent);
+		entity.add(DummyComponent);
+		entity.remove(DummyComponent);
 
-		expect(entity.components.has(DummyComponent)).toBe(false);
-		expect(() => entity.components.get(DummyComponent)).toThrow();
+		expect(entity.has(DummyComponent)).toBe(false);
+		expect(() => entity.get(DummyComponent)).toThrow();
 	});
 
 	it(`allows for components to be retrieved.`, () => {
@@ -29,11 +29,11 @@ describe('Entity', () => {
 		const updateQueue = { queueForUpdate: () => {} }
 		const entity = new Entity(updateQueue);
 
-		entity.components.add(DummyComponent);
+		entity.add(DummyComponent);
 
-		expect(() => entity.components.get(DummyComponent)).not.toThrow();
-		expect(entity.components.get(DummyComponent)).toBeInstanceOf(DummyComponent);
-		expect(entity.components.get(DummyComponent).property).toBe('foo');
+		expect(() => entity.get(DummyComponent)).not.toThrow();
+		expect(entity.get(DummyComponent)).toBeInstanceOf(DummyComponent);
+		expect(entity.get(DummyComponent).property).toBe('foo');
 	});
 
 	it(`allows to initialize components when they're added.`, () => {
@@ -41,11 +41,11 @@ describe('Entity', () => {
 		const updateQueue = { queueForUpdate: () => {} }
 		const entity = new Entity(updateQueue);
 
-		entity.components.add(DummyComponent, { property: 'bar' });
+		entity.add(DummyComponent, { property: 'bar' });
 
-		expect(() => entity.components.get(DummyComponent)).not.toThrow();
-		expect(entity.components.get(DummyComponent)).toBeInstanceOf(DummyComponent);
-		expect(entity.components.get(DummyComponent).property).toBe('bar');
+		expect(() => entity.get(DummyComponent)).not.toThrow();
+		expect(entity.get(DummyComponent)).toBeInstanceOf(DummyComponent);
+		expect(entity.get(DummyComponent).property).toBe('bar');
 	});
 
 	it(`provides a fluent interface for adding components.`, () => {
@@ -55,25 +55,25 @@ describe('Entity', () => {
 		const updateQueue = { queueForUpdate: () => {} }
 		const entity = new Entity(updateQueue);
 
-		entity.components
+		entity
 			.add(DummyComponent1)
 			.add(DummyComponent2)
 			.add(DummyComponent3, { property: 'buzz' });
 
-		expect(entity.components.has(DummyComponent1)).toBe(true);
-		expect(() => entity.components.get(DummyComponent1)).not.toThrow();
-		expect(entity.components.get(DummyComponent1)).toBeInstanceOf(DummyComponent1);
-		expect(entity.components.get(DummyComponent1).property).toBe('foo');
+		expect(entity.has(DummyComponent1)).toBe(true);
+		expect(() => entity.get(DummyComponent1)).not.toThrow();
+		expect(entity.get(DummyComponent1)).toBeInstanceOf(DummyComponent1);
+		expect(entity.get(DummyComponent1).property).toBe('foo');
 
-		expect(entity.components.has(DummyComponent2)).toBe(true);
-		expect(() => entity.components.get(DummyComponent2)).not.toThrow();
-		expect(entity.components.get(DummyComponent2)).toBeInstanceOf(DummyComponent2);
-		expect(entity.components.get(DummyComponent2).property).toBe('fuu');
+		expect(entity.has(DummyComponent2)).toBe(true);
+		expect(() => entity.get(DummyComponent2)).not.toThrow();
+		expect(entity.get(DummyComponent2)).toBeInstanceOf(DummyComponent2);
+		expect(entity.get(DummyComponent2).property).toBe('fuu');
 
-		expect(entity.components.has(DummyComponent3)).toBe(true);
-		expect(() => entity.components.get(DummyComponent3)).not.toThrow();
-		expect(entity.components.get(DummyComponent3)).toBeInstanceOf(DummyComponent3);
-		expect(entity.components.get(DummyComponent3).property).toBe('buzz');
+		expect(entity.has(DummyComponent3)).toBe(true);
+		expect(() => entity.get(DummyComponent3)).not.toThrow();
+		expect(entity.get(DummyComponent3)).toBeInstanceOf(DummyComponent3);
+		expect(entity.get(DummyComponent3).property).toBe('buzz');
 	});
 
 	it(`provides a fluent interface for removing components.`, () => {
@@ -83,23 +83,23 @@ describe('Entity', () => {
 		const updateQueue = { queueForUpdate: () => {} }
 		const entity = new Entity(updateQueue);
 
-		entity.components.add(DummyComponent1);
-		entity.components.add(DummyComponent2);
-		entity.components.add(DummyComponent3);
+		entity.add(DummyComponent1);
+		entity.add(DummyComponent2);
+		entity.add(DummyComponent3);
 
-		entity.components
+		entity
 			.remove(DummyComponent1)
 			.remove(DummyComponent2)
 			.remove(DummyComponent3);
 
-		expect(entity.components.has(DummyComponent1)).toBe(false);
-		expect(() => entity.components.get(DummyComponent1)).toThrow();
+		expect(entity.has(DummyComponent1)).toBe(false);
+		expect(() => entity.get(DummyComponent1)).toThrow();
 
-		expect(entity.components.has(DummyComponent2)).toBe(false);
-		expect(() => entity.components.get(DummyComponent2)).toThrow();
+		expect(entity.has(DummyComponent2)).toBe(false);
+		expect(() => entity.get(DummyComponent2)).toThrow();
 
-		expect(entity.components.has(DummyComponent3)).toBe(false);
-		expect(() => entity.components.get(DummyComponent3)).toThrow();
+		expect(entity.has(DummyComponent3)).toBe(false);
+		expect(() => entity.get(DummyComponent3)).toThrow();
 	});
 
 	it(`prevents duplicate components from being added.`, () => {
@@ -107,9 +107,9 @@ describe('Entity', () => {
 		const updateQueue = { queueForUpdate: () => {} }
 		const entity = new Entity(updateQueue);
 
-		entity.components.add(DummyComponent);
+		entity.add(DummyComponent);
 
-		expect(() => entity.components.add(DummyComponent))
+		expect(() => entity.add(DummyComponent))
 			.toThrowError(
 				new AttemptToAssignDuplicateComponent(entity, DummyComponent)
 			);
@@ -120,7 +120,7 @@ describe('Entity', () => {
 		const updateQueue = { queueForUpdate: () => {} }
 		const entity = new Entity(updateQueue);
 
-		expect(() => entity.components.remove(DummyComponent))
+		expect(() => entity.remove(DummyComponent))
 			.toThrowError(
 				new AttemptToRemoveUnassignedComponent(entity, DummyComponent)
 			);
@@ -131,7 +131,7 @@ describe('Entity', () => {
 		const updateQueue = { queueForUpdate: () => {} }
 		const entity = new Entity(updateQueue);
 
-		expect(() => entity.components.get(DummyComponent))
+		expect(() => entity.get(DummyComponent))
 			.toThrowError(
 				new AttemptToGetUnassignedComponent(entity, DummyComponent)
 			);
@@ -142,7 +142,7 @@ describe('Entity', () => {
 		const updateQueue = { queueForUpdate: jest.fn() }
 		const entity = new Entity(updateQueue);
 
-		entity.components.add(DummyComponent);
+		entity.add(DummyComponent);
 
 		expect(updateQueue.queueForUpdate).toHaveBeenCalledTimes(1);
 	});
@@ -152,11 +152,11 @@ describe('Entity', () => {
 		const updateQueue = { queueForUpdate: jest.fn() }
 		const entity = new Entity(updateQueue);
 
-		entity.components.add(DummyComponent);
+		entity.add(DummyComponent);
 
 		expect(updateQueue.queueForUpdate).toHaveBeenCalledTimes(1);
 
-		entity.components.remove(DummyComponent);
+		entity.remove(DummyComponent);
 
 		expect(updateQueue.queueForUpdate).toHaveBeenCalledTimes(2);
 	});

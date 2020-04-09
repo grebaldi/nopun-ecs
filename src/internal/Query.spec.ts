@@ -8,7 +8,7 @@ describe('Query > Writer', () => {
 		const entity = new Entity({ queueForUpdate: () => {} });
 		const query = new Query([DummyComponent]);
 
-		entity.components.add(DummyComponent);
+		entity.add(DummyComponent);
 
 		expect(query.reader.count).toBe(0);
 
@@ -25,7 +25,7 @@ describe('Query > Writer', () => {
 		const entity = new Entity({ queueForUpdate: () => {} });
 		const query = new Query([DummyComponent1]);
 
-		entity.components.add(DummyComponent2);
+		entity.add(DummyComponent2);
 
 		expect(query.reader.count).toBe(0);
 
@@ -41,7 +41,7 @@ describe('Query > Writer', () => {
 		const entity = new Entity({ queueForUpdate: () => {} });
 		const query = new Query([DummyComponent]);
 
-		entity.components.add(DummyComponent);
+		entity.add(DummyComponent);
 		query.writer.add(entity);
 
 		expect(query.reader.count).toBe(1);
@@ -60,7 +60,7 @@ describe('Query > Writer', () => {
 		const entity = new Entity({ queueForUpdate: () => {} });
 		const query = new Query([DummyComponent1]);
 
-		entity.components.add(DummyComponent2);
+		entity.add(DummyComponent2);
 
 		expect(query.reader.count).toBe(0);
 		expect(query.reader.has(entity)).toBe(false);
@@ -81,9 +81,9 @@ describe('Query > Reader', () => {
 		const entity3 = new Entity({ queueForUpdate: () => {} });
 		const query = new Query([DummyComponent]);
 
-		entity1.components.add(DummyComponent);
-		entity2.components.add(DummyComponent);
-		entity3.components.add(DummyComponent);
+		entity1.add(DummyComponent);
+		entity2.add(DummyComponent);
+		entity3.add(DummyComponent);
 
 		query.writer.add(entity1);
 		query.writer.add(entity2);
@@ -107,10 +107,10 @@ describe('Query > Reader', () => {
 		const entity4 = new Entity({ queueForUpdate: () => {} });
 		const query = new Query([DummyComponent1]);
 
-		entity1.components.add(DummyComponent1);
-		entity2.components.add(DummyComponent1);
-		entity3.components.add(DummyComponent2);
-		entity4.components.add(DummyComponent1);
+		entity1.add(DummyComponent1);
+		entity2.add(DummyComponent1);
+		entity3.add(DummyComponent2);
+		entity4.add(DummyComponent1);
 
 		query.writer.add(entity1);
 		query.writer.add(entity2);
@@ -134,7 +134,7 @@ describe('Query > Filter', () => {
 		const entity2 = new Entity({ queueForUpdate: () => {} });
 		const query = new Query([DummyComponent]);
 
-		entity1.components.add(DummyComponent);
+		entity1.add(DummyComponent);
 
 		expect(query.matches(entity1)).toBe(true);
 		expect(query.matches(entity2)).toBe(false);
@@ -150,10 +150,10 @@ describe('Query > Filter', () => {
 		const entity4 = new Entity({ queueForUpdate: () => {} });
 		const query = new Query([DummyComponent1, DummyComponent3]);
 
-		entity1.components.add(DummyComponent1).add(DummyComponent2);
-		entity2.components.add(DummyComponent1).add(DummyComponent3);
-		entity3.components.add(DummyComponent1);
-		entity4.components.add(DummyComponent1).add(DummyComponent2).add(DummyComponent3);
+		entity1.add(DummyComponent1).add(DummyComponent2);
+		entity2.add(DummyComponent1).add(DummyComponent3);
+		entity3.add(DummyComponent1);
+		entity4.add(DummyComponent1).add(DummyComponent2).add(DummyComponent3);
 
 		expect(query.matches(entity1)).toBe(false);
 		expect(query.matches(entity2)).toBe(true);
@@ -167,7 +167,7 @@ describe('Query > Filter', () => {
 		const entity2 = new Entity({ queueForUpdate: () => {} });
 		const query = new Query([Not(DummyComponent)]);
 
-		entity1.components.add(DummyComponent);
+		entity1.add(DummyComponent);
 
 		expect(query.matches(entity1)).toBe(false);
 		expect(query.matches(entity2)).toBe(true);
@@ -183,10 +183,10 @@ describe('Query > Filter', () => {
 		const entity4 = new Entity({ queueForUpdate: () => {} });
 		const query = new Query([Not(DummyComponent1), Not(DummyComponent3)]);
 
-		entity1.components.add(DummyComponent1).add(DummyComponent2);
-		entity2.components.add(DummyComponent1).add(DummyComponent3);
-		entity3.components.add(DummyComponent2);
-		entity4.components.add(DummyComponent1).add(DummyComponent2).add(DummyComponent3);
+		entity1.add(DummyComponent1).add(DummyComponent2);
+		entity2.add(DummyComponent1).add(DummyComponent3);
+		entity3.add(DummyComponent2);
+		entity4.add(DummyComponent1).add(DummyComponent2).add(DummyComponent3);
 
 		expect(query.matches(entity1)).toBe(false);
 		expect(query.matches(entity2)).toBe(false);
@@ -204,10 +204,10 @@ describe('Query > Filter', () => {
 		const entity4 = new Entity({ queueForUpdate: () => {} });
 		const query = new Query([DummyComponent1, Not(DummyComponent3)]);
 
-		entity1.components.add(DummyComponent1).add(DummyComponent2);
-		entity2.components.add(DummyComponent1).add(DummyComponent3);
-		entity3.components.add(DummyComponent2);
-		entity4.components.add(DummyComponent1).add(DummyComponent2).add(DummyComponent3);
+		entity1.add(DummyComponent1).add(DummyComponent2);
+		entity2.add(DummyComponent1).add(DummyComponent3);
+		entity3.add(DummyComponent2);
+		entity4.add(DummyComponent1).add(DummyComponent2).add(DummyComponent3);
 
 		expect(query.matches(entity1)).toBe(true);
 		expect(query.matches(entity2)).toBe(false);

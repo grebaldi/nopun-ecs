@@ -382,6 +382,17 @@ describe(`Scene > Entity Management`, () => {
 		expect((scene as any).entitiesStore.has(entity)).toBe(false);
 	});
 
+	it(`can tell whether an entity exists.`, () => {
+		const scene = new Scene();
+		const entity = scene.entities.create();
+
+		expect(scene.entities.exists(entity)).toBe(true);
+
+		scene.entities.destroy(entity);
+
+		expect(scene.entities.exists(entity)).toBe(false);
+	});
+
 	it(`prevents unknown entities from being destroyed.`, () => {
 		const scene1 = new Scene();
 		const scene2 = new Scene();

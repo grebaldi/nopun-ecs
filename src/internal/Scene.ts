@@ -165,6 +165,10 @@ export class Scene {
 			return entity;
 		}
 
+		function exists(entity: Entity): boolean {
+			return store.has(entity);
+		}
+
 		function destroy(entity: Entity) {
 			if (!store.has(entity))
 				throw new AttemptToDestroyUnknownOrForeignEntity(self, entity);
@@ -178,7 +182,7 @@ export class Scene {
 			}
 		}
 
-		return { create, destroy };
+		return { create, exists, destroy };
 	})();
 
 	public execute(deltaTime: number): void {

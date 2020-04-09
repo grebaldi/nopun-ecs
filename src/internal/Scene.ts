@@ -9,6 +9,34 @@ export class Scene {
 	private constructor() {}
 	public static create(): Scene { return new Scene(); }
 
+	public readonly debug = (() => {
+		const self = this;
+
+		return {
+			get scenes() {
+				let result = 1;
+
+				for (const scene of self.scenesStore) {
+					result += scene.debug.scenes;
+				}
+
+				return result;
+			},
+
+			get resources() {
+				return self.resourcesStore.size;
+			},
+
+			get systems() {
+				return self.systemsStore.size;
+			},
+
+			get entities() {
+				return self.entitiesStore.size;
+			}
+		}
+	})();
+
 	private readonly scenesStore = new Set<Scene>();
 	public readonly scenes = (() => {
 		const self = this;
@@ -47,9 +75,10 @@ export class Scene {
 		return { attach, detach }
 	})();
 
+	private readonly resourcesStore = new Map<ResourceConstructor, Resource>();
 	public readonly resources = (() => {
 		const self = this;
-		const store = new Map<ResourceConstructor, Resource>();
+		const store = this.resourcesStore;
 
 		function add<R extends Resource>(
 			RC: ResourceConstructor<R>,

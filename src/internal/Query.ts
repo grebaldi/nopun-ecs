@@ -5,16 +5,24 @@ export interface IQueryWriter {
 	add: (entity: Entity) => any;
 	update: (entity: Entity) => any;
 	remove: (entity: Entity) => any;
+	flush: () => any;
 }
 
 export interface IQueryReader {
 	count: number
 	results: Iterable<Entity>
+	added: Iterable<Entity>
+	removed: Iterable<Entity>
+	unchanged: Iterable<Entity>
 	has: (entity: Entity) => boolean
 }
 
 export class Query {
-	private readonly store = new Set<Entity>();
+	private readonly all = new Set<Entity>();
+	private readonly added = new Set<Entity>();
+	private readonly removed = new Set<Entity>();
+	private readonly unchanged = new Set<Entity>();
+
 	constructor(
 		private readonly filter: Filter
 	) {}
@@ -33,34 +41,55 @@ export class Query {
 		const query = this;
 
 		function add(entity: Entity) {
-			if(query.matches(entity))
-				query.store.add(entity);
+			if(query.matches(entity) && !query.all.has(entity)) {
+				query.all.add(entity);
+				query.added.add(entity);
+			}
 		}
 
 		function update(entity: Entity) {
-			if(query.matches(entity))
-				query.store.add(entity);
-			else
-				query.store.delete(entity);
+			if(query.matches(entity)) {
+				if (!query.all.has(entity)) {
+					query.all.add(entity);
+					query.added.add(entity);
+				}
+			} else remove(entity);
 		}
 
 		function remove(entity: Entity) {
-			query.store.delete(entity);
+			query.all.delete(entity);
+			query.added.delete(entity);
+			query.unchanged.delete(entity);
+
+			if(query.matches(entity))
+				query.removed.add(entity);
 		}
 
-		return { add, update, remove };
+		function flush() {
+			for (const entity of query.added) {
+				query.unchanged.add(entity);
+			}
+
+			query.added.clear();
+			query.removed.clear();
+		}
+
+		return { add, update, remove, flush };
 	})();
 
 	public readonly reader: IQueryReader = (() => {
 		const query = this;
 
 		function has(entity: Entity): boolean {
-			return query.store.has(entity);
+			return query.all.has(entity);
 		}
 
 		return {
-			get count() { return query.store.size },
-			results: query.store,
+			get count() { return query.all.size },
+			results: query.all,
+			added: query.added,
+			removed: query.removed,
+			unchanged: query.unchanged,
 			has
 		};
 	})();

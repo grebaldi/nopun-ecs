@@ -187,6 +187,12 @@ export class Scene {
 	})();
 
 	public execute(deltaTime: number): void {
+		for (const [,{queries}] of this.systemsStore) {
+			for (const query of queries) {
+				query.writer.flush();
+			}
+		}
+
 		for (const [,{system}] of this.systemsStore) {
 			for (const entity of this.entitiesThatNeedTobeUpdated) {
 				for (const [,{queries}] of this.systemsStore) {

@@ -1,6 +1,7 @@
 import { Scene, AttemptToGetResourceThatDoesNotExist, AttemptToAddResourceThatAlreadyExists, AttemptToRemoveResourceThatDoesNotExist, AttemptToAttachDuplicateScene, AttemptToDetachUnattachedScene, AttemptToCreateCircularReference, AttemptToAttachSceneToItself, AttemptToAttachSceneThatIsAlreadyAttachedElsewhere, AttemptToRegisterDuplicateSystem, AttemptToUnregisterUnknownSystem, AttemptToDestroyUnknownOrForeignEntity } from "./Scene";
 import { System } from "./System";
 import { Entity } from "./Entity";
+import { Query } from "./Query";
 
 describe(`Scene > Scene Graph Management`, () => {
 	it(`should allow for child scenes to be added.`, () => {
@@ -508,5 +509,98 @@ describe(`Scene > Entity Management`, () => {
 
 		expect(check2).toHaveBeenCalledTimes(5);
 		expect(check2).toHaveBeenLastCalledWith(.00165, entity2);
+	});
+
+	it('flushes query writers on every execution', () => {
+		const check1 = jest.fn();
+		const check2 = jest.fn();
+		const check3 = jest.fn();
+		class DummyComponent1 { property = 'foo' }
+		class DummyComponent2 { property = 'bar' }
+		class SystemThatAddsDummyComponent2 extends System {
+			static queries = {
+				entities: [DummyComponent1]
+			};
+
+			execute(dt: number) {
+				for (const entity of this.queries.entities.results) {
+					check1(dt, entity);
+					entity.add(DummyComponent2);
+				}
+			}
+
+		}
+		class SystemThatRemovesDummyComponent1 extends System {
+			static queries = {
+				entities: [DummyComponent1, DummyComponent2]
+			};
+
+			execute(dt: number) {
+				for (const entity of this.queries.entities.results) {
+					check2(dt, entity);
+					entity.remove(DummyComponent1);
+				}
+			}
+		}
+		class DummySystem extends System {
+			static queries = {
+				entities: [DummyComponent2]
+			};
+
+			execute(dt: number) {
+				for (const entity of this.queries.entities.results) {
+					check3(dt, entity);
+				}
+			}
+		}
+
+		const scene = new Scene();
+		const entity1 = scene.entities.create();
+		const entity2 = scene.entities.create();
+		const entity3 = scene.entities.create();
+
+		scene.systems.register(SystemThatAddsDummyComponent2);
+		scene.systems.register(SystemThatRemovesDummyComponent1);
+		scene.systems.register(DummySystem);
+
+		entity1.add(DummyComponent1);
+		entity2.add(DummyComponent2);
+		entity3.add(DummyComponent1);
+
+		// Execute scene
+		scene.execute(.00161);
+
+		// check1 should have been called twice
+		expect(check1).toHaveBeenCalledTimes(2);
+		expect(check1).toHaveBeenNthCalledWith(1, .00161, entity1);
+		expect(check1).toHaveBeenNthCalledWith(2, .00161, entity3);
+
+		// check2 should have been called twice
+		expect(check2).toHaveBeenCalledTimes(2);
+		expect(check2).toHaveBeenNthCalledWith(1, .00161, entity1);
+		expect(check2).toHaveBeenNthCalledWith(2, .00161, entity3);
+
+		// check3 should have been called three times
+		expect(check3).toHaveBeenCalledTimes(3);
+		expect(check3).toHaveBeenNthCalledWith(1, .00161, entity2);
+		expect(check3).toHaveBeenNthCalledWith(2, .00161, entity1);
+		expect(check3).toHaveBeenNthCalledWith(3, .00161, entity3);
+
+		// Execute Scene
+		scene.execute(.00162);
+
+		// check1 should have been called twice
+		expect(check1).toHaveBeenCalledTimes(2);
+		expect(check1).toHaveBeenLastCalledWith(.00161, entity3);
+
+		// check2 should have been called twice
+		expect(check2).toHaveBeenCalledTimes(2);
+		expect(check2).toHaveBeenLastCalledWith(.00161, entity3);
+
+		// check3 should have been called six times
+		expect(check3).toHaveBeenCalledTimes(6);
+		expect(check3).toHaveBeenNthCalledWith(4, .00162, entity2);
+		expect(check3).toHaveBeenNthCalledWith(5, .00162, entity1);
+		expect(check3).toHaveBeenNthCalledWith(6, .00162, entity3);
 	});
 });

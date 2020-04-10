@@ -125,6 +125,234 @@ describe('Query > Reader', () => {
 		expect(results.length).toBe(3);
 		expect(results).toMatchObject([entity1, entity2, entity4]);
 	});
+
+	it(`tracks added components`, () => {
+		class DummyComponent { property = 'foo' }
+		const entity = new Entity({ queueForUpdate: () => {} });
+		const query = new Query([DummyComponent]);
+		let results: Entity[];
+
+		entity.add(DummyComponent);
+
+		// query.added should be initially empty
+		results = [...query.reader.added];
+		expect(results.length).toBe(0);
+		expect(results).toMatchObject([]);
+
+		// query.results should be initially empty
+		results = [...query.reader.results];
+		expect(results.length).toBe(0);
+		expect(results).toMatchObject([]);
+
+		// Add entity
+		query.writer.add(entity);
+
+		// query.added should contain entity
+		results = [...query.reader.added];
+		expect(results.length).toBe(1);
+		expect(results).toMatchObject([entity]);
+
+		// query.results should contain entity
+		results = [...query.reader.results];
+		expect(results.length).toBe(1);
+		expect(results).toMatchObject([entity]);
+
+		// Remove entity
+		query.writer.remove(entity);
+
+		// query.added should be empty
+		results = [...query.reader.added];
+		expect(results.length).toBe(0);
+		expect(results).toMatchObject([]);
+
+		// query.results should be empty
+		results = [...query.reader.results];
+		expect(results.length).toBe(0);
+		expect(results).toMatchObject([]);
+
+		// Add entity
+		query.writer.add(entity);
+
+		// query.added should contain entity
+		results = [...query.reader.added];
+		expect(results.length).toBe(1);
+		expect(results).toMatchObject([entity]);
+
+		// query.results should contain entity
+		results = [...query.reader.results];
+		expect(results.length).toBe(1);
+		expect(results).toMatchObject([entity]);
+
+		// Flush query writer
+		query.writer.flush();
+
+		// query.added should be empty
+		results = [...query.reader.added];
+		expect(results.length).toBe(0);
+		expect(results).toMatchObject([]);
+
+		// query.results should contain entity
+		results = [...query.reader.results];
+		expect(results.length).toBe(1);
+		expect(results).toMatchObject([entity]);
+	});
+
+	it(`tracks removed components`, () => {
+		class DummyComponent { property = 'foo' }
+		const entity1 = new Entity({ queueForUpdate: () => {} });
+		const entity2 = new Entity({ queueForUpdate: () => {} });
+		const entity3 = new Entity({ queueForUpdate: () => {} });
+		const query = new Query([DummyComponent]);
+		let results: Entity[];
+
+		entity1.add(DummyComponent);
+		entity2.add(DummyComponent);
+		entity3.add(DummyComponent);
+
+		// query.removed should be initially empty
+		results = [...query.reader.removed];
+		expect(results.length).toBe(0);
+		expect(results).toMatchObject([]);
+
+		// Add entity1, entity2 and entity3
+		query.writer.add(entity1);
+		query.writer.add(entity2);
+		query.writer.add(entity3);
+
+		// Flush query writer
+		query.writer.flush();
+
+		// query.results should contain entity1, entity2 and entity3
+		results = [...query.reader.results];
+		expect(results.length).toBe(3);
+		expect(results).toMatchObject([entity1, entity2, entity3]);
+
+		// query.removed should be empty
+		results = [...query.reader.removed];
+		expect(results.length).toBe(0);
+		expect(results).toMatchObject([]);
+
+		// Remove entity2
+		query.writer.remove(entity2);
+
+		// query.results should contain entity1 and entity3
+		results = [...query.reader.results];
+		expect(results.length).toBe(2);
+		expect(results).toMatchObject([entity1, entity3]);
+
+		// query.removed should contain entity2
+		results = [...query.reader.removed];
+		expect(results.length).toBe(1);
+		expect(results).toMatchObject([entity2]);
+
+		// Flush query writer after removal
+		query.writer.flush();
+
+		// query.results should contain entity1 and entity3
+		results = [...query.reader.results];
+		expect(results.length).toBe(2);
+		expect(results).toMatchObject([entity1, entity3]);
+
+		// query.removed should be empty
+		results = [...query.reader.removed];
+		expect(results.length).toBe(0);
+		expect(results).toMatchObject([]);
+
+		// Remove entity1 and entity3
+		query.writer.remove(entity1);
+		query.writer.remove(entity3);
+
+		// query.results should be empty
+		results = [...query.reader.results];
+		expect(results.length).toBe(0);
+		expect(results).toMatchObject([]);
+
+		// query.removed should contain entity1 and entity3
+		results = [...query.reader.removed];
+		expect(results.length).toBe(2);
+		expect(results).toMatchObject([entity1, entity3]);
+
+		// Flush query writer after removal
+		query.writer.flush();
+
+		// query.results should be empty
+		results = [...query.reader.results];
+		expect(results.length).toBe(0);
+		expect(results).toMatchObject([]);
+
+		// query.removed should be empty
+		results = [...query.reader.removed];
+		expect(results.length).toBe(0);
+		expect(results).toMatchObject([]);
+	});
+
+	it(`tracks unchanged components`, () => {
+		class DummyComponent { property = 'foo' }
+		const entity1 = new Entity({ queueForUpdate: () => {} });
+		const entity2 = new Entity({ queueForUpdate: () => {} });
+		const entity3 = new Entity({ queueForUpdate: () => {} });
+		const query = new Query([DummyComponent]);
+		let results: Entity[];
+
+		entity1.add(DummyComponent);
+		entity2.add(DummyComponent);
+		entity3.add(DummyComponent);
+
+		// query.unchanged should be initially empty
+		results = [...query.reader.unchanged];
+		expect(results.length).toBe(0);
+		expect(results).toMatchObject([]);
+
+		// Add entity1
+		query.writer.add(entity1);
+
+		// query.unchanged should be empty
+		results = [...query.reader.unchanged];
+		expect(results.length).toBe(0);
+		expect(results).toMatchObject([]);
+
+		// Flush query writer
+		query.writer.flush();
+
+		// query.unchanged should contain only entity1
+		results = [...query.reader.unchanged];
+		expect(results.length).toBe(1);
+		expect(results).toMatchObject([entity1]);
+
+		// Add entity2 and entity3
+		query.writer.add(entity2);
+		query.writer.add(entity3);
+
+		// query.unchanged should contain only entity1
+		results = [...query.reader.unchanged];
+		expect(results.length).toBe(1);
+		expect(results).toMatchObject([entity1]);
+
+		// Flush query writer
+		query.writer.flush();
+
+		// query.unchanged should contain entity1, entity2 and entity3
+		results = [...query.reader.unchanged];
+		expect(results.length).toBe(3);
+		expect(results).toMatchObject([entity1, entity2, entity3]);
+
+		// Remove entity2
+		query.writer.remove(entity2);
+
+		// query.unchanged should contain entity1 and entity3
+		results = [...query.reader.unchanged];
+		expect(results.length).toBe(2);
+		expect(results).toMatchObject([entity1, entity3]);
+
+		// Remove entity1 and entity3
+		query.writer.remove(entity1);
+		query.writer.remove(entity3);
+
+		// query.unchanged should be empty
+		results = [...query.reader.unchanged];
+		expect(results.length).toBe(0);
+		expect(results).toMatchObject([]);
+	});
 });
 
 describe('Query > Filter', () => {
@@ -214,4 +442,4 @@ describe('Query > Filter', () => {
 		expect(query.matches(entity3)).toBe(false);
 		expect(query.matches(entity4)).toBe(false);
 	});
-})
+});

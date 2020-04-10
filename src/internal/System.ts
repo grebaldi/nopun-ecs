@@ -14,6 +14,7 @@ export abstract class System {
 		}
 	) {}
 
+	public initialize() {}
 	public abstract execute(deltaTime: number): void;
 }
 

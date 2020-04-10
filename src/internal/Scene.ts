@@ -132,6 +132,7 @@ export class Scene {
 			const container = new SystemContainer(system, queries);
 
 			store.set(SC, container);
+			system.initialize();
 		}
 
 		function unregister(SC: SystemConstructor) {

@@ -270,6 +270,20 @@ describe(`Scene > Systems Management`, () => {
 		expect((scene as any).systemsStore.size).toBe(1);
 	});
 
+	it(`initializes systems upon registration`, () => {
+		const initialize = jest.fn();
+		class DummySystem extends System {
+			initialize = initialize;
+			execute: () => {}
+		}
+		const scene = new Scene();
+
+		expect(() => scene.systems.register(DummySystem))
+			.not.toThrow();
+
+		expect(initialize).toHaveBeenCalledTimes(1);
+	});
+
 	it(`should allow for systems to be removed.`, () => {
 		class DummySystem extends System { execute: () => {} }
 		const scene = new Scene();

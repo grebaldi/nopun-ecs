@@ -430,7 +430,7 @@ describe(`Scene > Entity Management`, () => {
 			};
 
 			execute(dt: number) {
-				for (const entity of this.queries.foos.results) {
+				for (const entity of this.queries.foos.all) {
 					check1(dt, entity);
 				}
 			}
@@ -441,7 +441,7 @@ describe(`Scene > Entity Management`, () => {
 			};
 
 			execute(dt: number) {
-				for (const entity of this.queries.foos.results) {
+				for (const entity of this.queries.foos.all) {
 					check2(dt, entity);
 				}
 			}
@@ -523,7 +523,7 @@ describe(`Scene > Entity Management`, () => {
 			};
 
 			execute(dt: number) {
-				for (const entity of this.queries.entities.results) {
+				for (const entity of this.queries.entities.all) {
 					check1(dt, entity);
 					entity.add(DummyComponent2);
 				}
@@ -536,7 +536,7 @@ describe(`Scene > Entity Management`, () => {
 			};
 
 			execute(dt: number) {
-				for (const entity of this.queries.entities.results) {
+				for (const entity of this.queries.entities.all) {
 					check2(dt, entity);
 					entity.remove(DummyComponent1);
 				}
@@ -548,7 +548,7 @@ describe(`Scene > Entity Management`, () => {
 			};
 
 			execute(dt: number) {
-				for (const entity of this.queries.entities.results) {
+				for (const entity of this.queries.entities.all) {
 					check3(dt, entity);
 				}
 			}

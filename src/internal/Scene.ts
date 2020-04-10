@@ -114,7 +114,7 @@ export class Scene {
 		const self = this;
 		const store = this.systemsStore;
 
-		function register<S extends System>(SC: SystemConstructor<S>) {
+		function register<S extends System>(SC: SystemConstructor<S>): void {
 			if (store.has(SC))
 				throw new AttemptToRegisterDuplicateSystem(self, SC);
 
@@ -135,7 +135,7 @@ export class Scene {
 			system.initialize();
 		}
 
-		function unregister(SC: SystemConstructor) {
+		function unregister(SC: SystemConstructor): void {
 			if (!store.has(SC))
 				throw new AttemptToUnregisterUnknownSystem(self, SC);
 

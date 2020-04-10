@@ -90,7 +90,7 @@ describe('Query > Reader', () => {
 		query.writer.add(entity3);
 
 		const results = [];
-		for (const entity of query.reader.results) {
+		for (const entity of query.reader.all) {
 			results.push(entity);
 		}
 
@@ -118,7 +118,7 @@ describe('Query > Reader', () => {
 		query.writer.add(entity4);
 
 		const results = [];
-		for (const entity of query.reader.results) {
+		for (const entity of query.reader.all) {
 			results.push(entity);
 		}
 
@@ -139,8 +139,8 @@ describe('Query > Reader', () => {
 		expect(results.length).toBe(0);
 		expect(results).toMatchObject([]);
 
-		// query.results should be initially empty
-		results = [...query.reader.results];
+		// query.all should be initially empty
+		results = [...query.reader.all];
 		expect(results.length).toBe(0);
 		expect(results).toMatchObject([]);
 
@@ -152,8 +152,8 @@ describe('Query > Reader', () => {
 		expect(results.length).toBe(1);
 		expect(results).toMatchObject([entity]);
 
-		// query.results should contain entity
-		results = [...query.reader.results];
+		// query.all should contain entity
+		results = [...query.reader.all];
 		expect(results.length).toBe(1);
 		expect(results).toMatchObject([entity]);
 
@@ -165,8 +165,8 @@ describe('Query > Reader', () => {
 		expect(results.length).toBe(0);
 		expect(results).toMatchObject([]);
 
-		// query.results should be empty
-		results = [...query.reader.results];
+		// query.all should be empty
+		results = [...query.reader.all];
 		expect(results.length).toBe(0);
 		expect(results).toMatchObject([]);
 
@@ -178,8 +178,8 @@ describe('Query > Reader', () => {
 		expect(results.length).toBe(1);
 		expect(results).toMatchObject([entity]);
 
-		// query.results should contain entity
-		results = [...query.reader.results];
+		// query.all should contain entity
+		results = [...query.reader.all];
 		expect(results.length).toBe(1);
 		expect(results).toMatchObject([entity]);
 
@@ -191,8 +191,8 @@ describe('Query > Reader', () => {
 		expect(results.length).toBe(0);
 		expect(results).toMatchObject([]);
 
-		// query.results should contain entity
-		results = [...query.reader.results];
+		// query.all should contain entity
+		results = [...query.reader.all];
 		expect(results.length).toBe(1);
 		expect(results).toMatchObject([entity]);
 	});
@@ -222,8 +222,8 @@ describe('Query > Reader', () => {
 		// Flush query writer
 		query.writer.flush();
 
-		// query.results should contain entity1, entity2 and entity3
-		results = [...query.reader.results];
+		// query.all should contain entity1, entity2 and entity3
+		results = [...query.reader.all];
 		expect(results.length).toBe(3);
 		expect(results).toMatchObject([entity1, entity2, entity3]);
 
@@ -235,8 +235,8 @@ describe('Query > Reader', () => {
 		// Remove entity2
 		query.writer.remove(entity2);
 
-		// query.results should contain entity1 and entity3
-		results = [...query.reader.results];
+		// query.all should contain entity1 and entity3
+		results = [...query.reader.all];
 		expect(results.length).toBe(2);
 		expect(results).toMatchObject([entity1, entity3]);
 
@@ -248,8 +248,8 @@ describe('Query > Reader', () => {
 		// Flush query writer after removal
 		query.writer.flush();
 
-		// query.results should contain entity1 and entity3
-		results = [...query.reader.results];
+		// query.all should contain entity1 and entity3
+		results = [...query.reader.all];
 		expect(results.length).toBe(2);
 		expect(results).toMatchObject([entity1, entity3]);
 
@@ -262,8 +262,8 @@ describe('Query > Reader', () => {
 		query.writer.remove(entity1);
 		query.writer.remove(entity3);
 
-		// query.results should be empty
-		results = [...query.reader.results];
+		// query.all should be empty
+		results = [...query.reader.all];
 		expect(results.length).toBe(0);
 		expect(results).toMatchObject([]);
 
@@ -275,8 +275,8 @@ describe('Query > Reader', () => {
 		// Flush query writer after removal
 		query.writer.flush();
 
-		// query.results should be empty
-		results = [...query.reader.results];
+		// query.all should be empty
+		results = [...query.reader.all];
 		expect(results.length).toBe(0);
 		expect(results).toMatchObject([]);
 

@@ -10,7 +10,7 @@ export interface IQueryWriter {
 
 export interface IQueryReader {
 	count: number
-	results: Iterable<Entity>
+	all: Iterable<Entity>
 	added: Iterable<Entity>
 	removed: Iterable<Entity>
 	unchanged: Iterable<Entity>
@@ -86,7 +86,7 @@ export class Query {
 
 		return {
 			get count() { return query.all.size },
-			results: query.all,
+			all: query.all,
 			added: query.added,
 			removed: query.removed,
 			unchanged: query.unchanged,

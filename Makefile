@@ -5,3 +5,12 @@ build::
 
 test::
 	@jest --verbose
+
+prepare-release::
+	@sed -i 's/"version": ".*"/"version": "$(version)"/' package.json
+	@git add package.json
+	@git commit -m "Prepare release v$(version)"
+	@git tag v$(version)
+
+release::
+	@npm publish

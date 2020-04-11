@@ -1,7 +1,7 @@
 {
   "name": "nopun-ecs",
   "description": "An Entity-Component-System implementation in Typescript with no pun in its package name",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "license": "MIT",

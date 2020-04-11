@@ -13,4 +13,5 @@ prepare-release::
 	@git tag v$(version)
 
 release::
+	@$(MAKE) test
 	@npm publish

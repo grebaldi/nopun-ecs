@@ -6,6 +6,10 @@ import { Entity } from "./Entity";
 export class Scene {
 	private parent: Scene | null = null;
 
+	constructor() {
+		this.initialize();
+	}
+
 	public readonly debug = (() => {
 		const self = this;
 
@@ -33,6 +37,14 @@ export class Scene {
 			}
 		}
 	})();
+
+	public initialize() {}
+
+	public destroy() {
+		for (const [,{system}] of this.systemsStore) {
+			system.destroy();
+		}
+	}
 
 	private readonly scenesStore = new Set<Scene>();
 	public readonly scenes = (() => {
@@ -139,7 +151,9 @@ export class Scene {
 			if (!store.has(SC))
 				throw new AttemptToUnregisterUnknownSystem(self, SC);
 
+			const {system} = store.get(SC);
 			store.delete(SC);
+			system.destroy();
 		}
 
 		return { register, unregister };

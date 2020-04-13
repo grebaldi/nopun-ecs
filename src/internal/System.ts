@@ -15,6 +15,7 @@ export abstract class System {
 	) {}
 
 	public initialize() {}
+	public destroy() {}
 	public abstract execute(deltaTime: number): void;
 }
 

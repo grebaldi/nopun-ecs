@@ -1,9 +1,19 @@
 import { Scene, AttemptToGetResourceThatDoesNotExist, AttemptToAddResourceThatAlreadyExists, AttemptToRemoveResourceThatDoesNotExist, AttemptToAttachDuplicateScene, AttemptToDetachUnattachedScene, AttemptToCreateCircularReference, AttemptToAttachSceneToItself, AttemptToAttachSceneThatIsAlreadyAttachedElsewhere, AttemptToRegisterDuplicateSystem, AttemptToUnregisterUnknownSystem, AttemptToDestroyUnknownOrForeignEntity } from "./Scene";
 import { System } from "./System";
 import { Entity } from "./Entity";
-import { Query } from "./Query";
 
 describe(`Scene > Scene Graph Management`, () => {
+	it(`initializes itself.`, () => {
+		const initialize = jest.fn();
+		class DummyScene extends Scene {
+			initialize() { initialize() }
+		}
+
+		new DummyScene();
+
+		expect(initialize).toHaveBeenCalledTimes(1);
+	});
+
 	it(`should allow for child scenes to be added.`, () => {
 		const parentScene = new Scene();
 		const childScene = new Scene();
@@ -285,6 +295,20 @@ describe(`Scene > Systems Management`, () => {
 		expect(initialize).toHaveBeenCalledTimes(1);
 	});
 
+	it(`destroys systems upon self-destruction.`, () => {
+		const destroy = jest.fn();
+		class DummySystem extends System {
+			destroy = destroy;
+			execute: () => {}
+		}
+		const scene = new Scene();
+
+		scene.systems.register(DummySystem);
+
+		expect(() => scene.destroy()).not.toThrow();
+		expect(destroy).toHaveBeenCalledTimes(1);
+	});
+
 	it(`should allow for systems to be removed.`, () => {
 		class DummySystem extends System { execute: () => {} }
 		const scene = new Scene();
@@ -297,6 +321,21 @@ describe(`Scene > Systems Management`, () => {
 			.not.toThrow();
 
 		expect((scene as any).systemsStore.size).toBe(0);
+	});
+
+	it(`destroys system upon removal.`, () => {
+		const destroy = jest.fn();
+		class DummySystem extends System {
+			destroy = destroy;
+			execute: () => {}
+		}
+		const scene = new Scene();
+
+		scene.systems.register(DummySystem);
+
+		expect(() => scene.systems.unregister(DummySystem))
+			.not.toThrow();
+		expect(destroy).toHaveBeenCalledTimes(1);
 	});
 
 	it(`should prevent duplicate systems from being added`, () => {

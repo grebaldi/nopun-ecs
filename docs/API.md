@@ -27,6 +27,32 @@ const myScene = new MyScene();
 
 The scene constructor takes no parameters.
 
+### `scene.initialize(): void`
+
+This method can be overridden to implement custom initialization logic.
+
+**EXAMPLE:**
+```typescript
+import { Scene, Entity } from "nopun-ecs";
+
+class MyScene extends Scene {
+    private player: Entity;
+
+    initialize() {
+        this.player = this.entities.create();
+    }
+}
+```
+
+### `scene.destroy(): void`
+
+This will call the `destroy`-method of all systems. Also, it could be used to implement custom cleanup logic, but remember to call `super.destroy()` within your custom method, so all systems can free their resources.
+
+**EXAMPLE:**
+```typescript
+scene.destroy();
+```
+
 ### `scene.resources.add(RC: ResourceConstructor, initialValue?: object): Resource`
 
 Resources are - like components - just data containers. They are not bound to an entity but to the scene itself, so you can use them to store central data.
@@ -333,6 +359,21 @@ class MySystem extends System {
 
     initialize() {
         document.addEventListener(/* ... */);
+    }
+}
+```
+
+### `(system) this.destroy(): void`
+
+The `destroy` method is called when the system is unregistered from a scene or when the scene itself gets destroyed. This would be place to clean up and free any resources claimed in the `initialize` method.
+
+**EXAMPLE:**
+```typescript
+class MySystem extends System {
+    /* ... */
+
+    destroy() {
+        document.removeEventListener(/* ... */);
     }
 }
 ```

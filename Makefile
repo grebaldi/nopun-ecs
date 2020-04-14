@@ -14,4 +14,5 @@ prepare-release::
 
 release::
 	@$(MAKE) test
+	@$(MAKE) build
 	@npm publish

@@ -306,6 +306,10 @@ myEntity.remove(My3DPositionComponent);
 
 This method will throw an error on the attempt of removing a component that has not been added before.
 
+### `entity.scene: Scene`
+
+Every entity holds a reference to the scene it was created in.
+
 ## System
 
 Systems manipulate component data by querying for entities based on their components.

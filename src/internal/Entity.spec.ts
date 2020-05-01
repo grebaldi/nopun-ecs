@@ -1,10 +1,12 @@
 import { Entity, AttemptToAssignDuplicateComponent, AttemptToRemoveUnassignedComponent, AttemptToGetUnassignedComponent, AttemptToUpdateUnassignedComponent } from "./Entity";
+import { Scene } from "./Scene";
 
 describe('Entity', () => {
 	it(`allows for components to be added.`, () => {
 		class DummyComponent { property = 'foo' }
 		const updateQueue = { queueForUpdate: () => {} }
-		const entity = new Entity(updateQueue);
+		const scene = new Scene();
+		const entity = new Entity(scene, updateQueue);
 
 		entity.add(DummyComponent);
 
@@ -15,7 +17,8 @@ describe('Entity', () => {
 	it(`allows for components to be updated.`, () => {
 		class DummyComponent { property = 'foo' }
 		const updateQueue = { queueForUpdate: () => {} }
-		const entity = new Entity(updateQueue);
+		const scene = new Scene();
+		const entity = new Entity(scene, updateQueue);
 
 		entity.add(DummyComponent);
 
@@ -29,7 +32,8 @@ describe('Entity', () => {
 	it(`allows for components to be removed.`, () => {
 		class DummyComponent { property = 'foo' }
 		const updateQueue = { queueForUpdate: () => {} }
-		const entity = new Entity(updateQueue);
+		const scene = new Scene();
+		const entity = new Entity(scene, updateQueue);
 
 		entity.add(DummyComponent);
 		entity.remove(DummyComponent);
@@ -41,7 +45,8 @@ describe('Entity', () => {
 	it(`allows for components to be retrieved.`, () => {
 		class DummyComponent { property = 'foo' }
 		const updateQueue = { queueForUpdate: () => {} }
-		const entity = new Entity(updateQueue);
+		const scene = new Scene();
+		const entity = new Entity(scene, updateQueue);
 
 		entity.add(DummyComponent);
 
@@ -53,7 +58,8 @@ describe('Entity', () => {
 	it(`allows to initialize components when they're added.`, () => {
 		class DummyComponent { property = 'foo' }
 		const updateQueue = { queueForUpdate: () => {} }
-		const entity = new Entity(updateQueue);
+		const scene = new Scene();
+		const entity = new Entity(scene, updateQueue);
 
 		entity.add(DummyComponent, { property: 'bar' });
 
@@ -67,7 +73,8 @@ describe('Entity', () => {
 		class DummyComponent2 { property = 'fuu' }
 		class DummyComponent3 { property = 'fizz' }
 		const updateQueue = { queueForUpdate: () => {} }
-		const entity = new Entity(updateQueue);
+		const scene = new Scene();
+		const entity = new Entity(scene, updateQueue);
 
 		entity
 			.add(DummyComponent1)
@@ -95,7 +102,8 @@ describe('Entity', () => {
 		class DummyComponent2 { property = 'fuu' }
 		class DummyComponent3 { property = 'fizz' }
 		const updateQueue = { queueForUpdate: () => {} }
-		const entity = new Entity(updateQueue);
+		const scene = new Scene();
+		const entity = new Entity(scene, updateQueue);
 
 		entity.add(DummyComponent1);
 		entity.add(DummyComponent2);
@@ -119,7 +127,8 @@ describe('Entity', () => {
 	it(`prevents duplicate components from being added.`, () => {
 		class DummyComponent { property = 'foo' }
 		const updateQueue = { queueForUpdate: () => {} }
-		const entity = new Entity(updateQueue);
+		const scene = new Scene();
+		const entity = new Entity(scene, updateQueue);
 
 		entity.add(DummyComponent);
 
@@ -132,7 +141,8 @@ describe('Entity', () => {
 	it(`prevents unknown components from being updated.`, () => {
 		class DummyComponent { property = 'foo' }
 		const updateQueue = { queueForUpdate: () => {} }
-		const entity = new Entity(updateQueue);
+		const scene = new Scene();
+		const entity = new Entity(scene, updateQueue);
 
 		expect(() => entity.update(DummyComponent, { property: 'bar' }))
 			.toThrowError(
@@ -143,7 +153,8 @@ describe('Entity', () => {
 	it(`prevents unknown components from being removed.`, () => {
 		class DummyComponent { property = 'foo' }
 		const updateQueue = { queueForUpdate: () => {} }
-		const entity = new Entity(updateQueue);
+		const scene = new Scene();
+		const entity = new Entity(scene, updateQueue);
 
 		expect(() => entity.remove(DummyComponent))
 			.toThrowError(
@@ -154,7 +165,8 @@ describe('Entity', () => {
 	it(`raises an error on the attempt of retrieving an unknown component.`, () => {
 		class DummyComponent { property = 'foo' }
 		const updateQueue = { queueForUpdate: () => {} }
-		const entity = new Entity(updateQueue);
+		const scene = new Scene();
+		const entity = new Entity(scene, updateQueue);
 
 		expect(() => entity.get(DummyComponent))
 			.toThrowError(
@@ -165,7 +177,8 @@ describe('Entity', () => {
 	it(`schedules itself for update when a component is added.`, () => {
 		class DummyComponent { property = 'foo' }
 		const updateQueue = { queueForUpdate: jest.fn() }
-		const entity = new Entity(updateQueue);
+		const scene = new Scene();
+		const entity = new Entity(scene, updateQueue);
 
 		entity.add(DummyComponent);
 
@@ -175,7 +188,8 @@ describe('Entity', () => {
 	it(`schedules itself for update when a component is removed.`, () => {
 		class DummyComponent { property = 'foo' }
 		const updateQueue = { queueForUpdate: jest.fn() }
-		const entity = new Entity(updateQueue);
+		const scene = new Scene();
+		const entity = new Entity(scene, updateQueue);
 
 		entity.add(DummyComponent);
 
@@ -184,5 +198,13 @@ describe('Entity', () => {
 		entity.remove(DummyComponent);
 
 		expect(updateQueue.queueForUpdate).toHaveBeenCalledTimes(2);
+	});
+
+	it(`provides a reference to the scene`, () => {
+		const updateQueue = { queueForUpdate: jest.fn() }
+		const scene = new Scene();
+		const entity = new Entity(scene, updateQueue);
+
+		expect(entity.scene).toBe(scene);
 	});
 });

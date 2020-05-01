@@ -175,7 +175,7 @@ export class Scene {
 		const store = this.entitiesStore;
 
 		function create(): Entity {
-			const entity = new Entity(self.entityUpdateQueue);
+			const entity = new Entity(self, self.entityUpdateQueue);
 			store.add(entity);
 			return entity;
 		}

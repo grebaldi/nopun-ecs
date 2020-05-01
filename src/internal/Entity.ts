@@ -1,4 +1,5 @@
 import { ComponentConstructor, Component } from "./Component";
+import { Scene } from "./Scene";
 
 export interface IUpdateQueue {
 	queueForUpdate: (entity: Entity) => any
@@ -18,6 +19,7 @@ export interface IComponentRemover {
 export class Entity {
 	private readonly componentsStore = new Map<ComponentConstructor, Component>();
 	constructor(
+		public readonly scene: Scene,
 		private readonly updateQueue: IUpdateQueue
 	) {}
 

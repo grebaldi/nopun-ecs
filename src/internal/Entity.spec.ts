@@ -207,4 +207,18 @@ describe('Entity', () => {
 
 		expect(entity.scene).toBe(scene);
 	});
+
+	it(`creates children`, () => {
+		const updateQueue = { queueForUpdate: jest.fn() }
+		const scene = new Scene();
+		const entity = new Entity(scene, updateQueue);
+
+		expect(() => entity.children.create()).not.toThrow();
+		expect(entity.children.create()).toBeInstanceOf(Entity);
+
+		const thirdChild = entity.children.create();
+
+		expect(scene.debug.entities).toBe(3); // `entity` is not known to the scene in this case
+		expect(scene.entities.exists(thirdChild)).toBe(true);
+	});
 });

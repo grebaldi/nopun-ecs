@@ -306,6 +306,19 @@ myEntity.remove(My3DPositionComponent);
 
 This method will throw an error on the attempt of removing a component that has not been added before.
 
+### `entity.children.create(): Entity`
+
+An entity can create child entities. Those child entities are removed alongside the entity, so you don't have to worry about cleaning them up.
+
+**EXAMPLE:**
+```typescript
+const childEntity = myEntity.children.create().add(MyComponent);
+
+scene.entities.has(childEntity); // returns true
+scene.entities.destroy(myEntity);
+scene.entities.has(childEntity); // returns false
+```
+
 ### `entity.scene: Scene`
 
 Every entity holds a reference to the scene it was created in.

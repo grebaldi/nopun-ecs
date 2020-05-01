@@ -642,4 +642,53 @@ describe(`Scene > Entity Management`, () => {
 		expect(check3).toHaveBeenNthCalledWith(5, .00162, entity1);
 		expect(check3).toHaveBeenNthCalledWith(6, .00162, entity3);
 	});
+
+	it(`removes entity children upon destruction`, () => {
+		const scene = new Scene();
+		const entity = scene.entities.create();
+
+		const firstChild = entity.children.create();
+		const secondChild = entity.children.create();
+		const thirdChild = entity.children.create();
+
+		expect(scene.debug.entities).toBe(4);
+		expect(scene.entities.exists(firstChild)).toBe(true);
+		expect(scene.entities.exists(secondChild)).toBe(true);
+		expect(scene.entities.exists(thirdChild)).toBe(true);
+
+		scene.entities.destroy(entity);
+
+		expect(scene.debug.entities).toBe(0);
+		expect(scene.entities.exists(firstChild)).toBe(false);
+		expect(scene.entities.exists(secondChild)).toBe(false);
+		expect(scene.entities.exists(thirdChild)).toBe(false);
+	});
+
+	it(`removes only remaining entity children upon destruction`, () => {
+		const scene = new Scene();
+		const entity = scene.entities.create();
+
+		const firstChild = entity.children.create();
+		const secondChild = entity.children.create();
+		const thirdChild = entity.children.create();
+
+		expect(scene.debug.entities).toBe(4);
+		expect(scene.entities.exists(firstChild)).toBe(true);
+		expect(scene.entities.exists(secondChild)).toBe(true);
+		expect(scene.entities.exists(thirdChild)).toBe(true);
+
+		scene.entities.destroy(secondChild);
+
+		expect(scene.debug.entities).toBe(3);
+		expect(scene.entities.exists(firstChild)).toBe(true);
+		expect(scene.entities.exists(secondChild)).toBe(false);
+		expect(scene.entities.exists(thirdChild)).toBe(true);
+
+		scene.entities.destroy(entity);
+
+		expect(scene.debug.entities).toBe(0);
+		expect(scene.entities.exists(firstChild)).toBe(false);
+		expect(scene.entities.exists(secondChild)).toBe(false);
+		expect(scene.entities.exists(thirdChild)).toBe(false);
+	})
 });

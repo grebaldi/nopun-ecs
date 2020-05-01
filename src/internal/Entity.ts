@@ -70,6 +70,22 @@ export class Entity {
 
 		return this.componentsStore.get(CC) as C;
 	}
+
+	private readonly childrenStore = new Set<Entity>();
+	public readonly children = (() => {
+		const self = this;
+		const store = this.childrenStore;
+
+		function create(): Entity {
+			const child = self.scene.entities.create();
+
+			store.add(child);
+
+			return child;
+		}
+
+		return { create };
+	})();
 }
 
 export class EntityError extends Error {

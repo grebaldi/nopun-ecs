@@ -190,6 +190,17 @@ export class Scene {
 
 			store.delete(entity);
 
+			// @TODO: This is ugly, but `childrenStore` is not supposed to be
+			// public API, so I'm fine with circumventing the type system
+			// at this point.
+			for (const child of (entity as any).childrenStore) {
+				if (store.has(child)) {
+					self.entities.destroy(child);
+				}
+			}
+
+			(entity as any).childrenStore.clear();
+
 			for (const [,{queries}] of self.systemsStore) {
 				for (const query of queries) {
 					query.writer.remove(entity);

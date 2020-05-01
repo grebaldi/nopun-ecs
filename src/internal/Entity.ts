@@ -5,17 +5,6 @@ export interface IUpdateQueue {
 	queueForUpdate: (entity: Entity) => any
 }
 
-export interface IComponentAdder {
-	add: <C extends Component>(
-		CC: ComponentConstructor<C>,
-		initialValue?: Partial<C>
-	) => IComponentAdder
-}
-
-export interface IComponentRemover {
-	remove: (CC: ComponentConstructor) => IComponentRemover
-}
-
 export class Entity {
 	private readonly componentsStore = new Map<ComponentConstructor, Component>();
 	constructor(

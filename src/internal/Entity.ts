@@ -36,6 +36,19 @@ export class Entity {
 		return this;
 	}
 
+	public update<C extends Component>(
+		CC: ComponentConstructor<C>,
+		overwriteValue: Partial<C>
+	): this {
+		if (!this.componentsStore.has(CC))
+			throw new AttemptToUpdateUnassignedComponent(this, CC);
+
+		const component = this.componentsStore.get(CC) as C;
+		Object.assign(component, overwriteValue);
+
+		return this;
+	}
+
 	public remove(CC: ComponentConstructor): this {
 		if (!this.componentsStore.has(CC))
 			throw new AttemptToRemoveUnassignedComponent(this, CC);
@@ -71,6 +84,18 @@ export class AttemptToAssignDuplicateComponent extends EntityError {
 		super(
 			`Component "${CC.name}" cannot be assigned to entity, ` +
 			`because the entity already has a component "${CC.name}".`
+		);
+	}
+}
+
+export class AttemptToUpdateUnassignedComponent extends EntityError {
+	constructor(
+		public readonly entity: Entity,
+		public readonly CC: ComponentConstructor
+	) {
+		super(
+			`Component "${CC.name}" cannot be updated for entity, ` +
+			`because the entity has no component "${CC.name}".`
 		);
 	}
 }

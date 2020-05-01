@@ -259,6 +259,20 @@ const myEntity = scene.entities.create()
 
 This method will throw an error on the attempt of adding the same component twice.
 
+### `entity.update(CC: ComponentConstructor, value?: object): Entity`
+
+This method overrides the value of an already added component.
+
+**EXAMPLE**
+```typescript
+myEntity
+    .update(My3DPositionComponent, {
+        x: 64
+    });
+```
+
+This method will throw an error on the attempt of updating a component that has not been added before.
+
 ### `entity.get(CC: ComponentConstructor): Component`
 
 The data of a component can be obtained via this method.

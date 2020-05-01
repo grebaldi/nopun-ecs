@@ -1,4 +1,4 @@
-import { Entity, AttemptToAssignDuplicateComponent, AttemptToRemoveUnassignedComponent, AttemptToGetUnassignedComponent } from "./Entity";
+import { Entity, AttemptToAssignDuplicateComponent, AttemptToRemoveUnassignedComponent, AttemptToGetUnassignedComponent, AttemptToUpdateUnassignedComponent } from "./Entity";
 
 describe('Entity', () => {
 	it(`allows for components to be added.`, () => {
@@ -10,6 +10,20 @@ describe('Entity', () => {
 
 		expect(entity.has(DummyComponent)).toBe(true);
 		expect(entity.get(DummyComponent)).toBeInstanceOf(DummyComponent);
+	});
+
+	it(`allows for components to be updated.`, () => {
+		class DummyComponent { property = 'foo' }
+		const updateQueue = { queueForUpdate: () => {} }
+		const entity = new Entity(updateQueue);
+
+		entity.add(DummyComponent);
+
+		expect(entity.get(DummyComponent).property).toBe('foo');
+
+		entity.update(DummyComponent, { property: 'bar' });
+
+		expect(entity.get(DummyComponent).property).toBe('bar');
 	});
 
 	it(`allows for components to be removed.`, () => {
@@ -112,6 +126,17 @@ describe('Entity', () => {
 		expect(() => entity.add(DummyComponent))
 			.toThrowError(
 				new AttemptToAssignDuplicateComponent(entity, DummyComponent)
+			);
+	});
+
+	it(`prevents unknown components from being updated.`, () => {
+		class DummyComponent { property = 'foo' }
+		const updateQueue = { queueForUpdate: () => {} }
+		const entity = new Entity(updateQueue);
+
+		expect(() => entity.update(DummyComponent, { property: 'bar' }))
+			.toThrowError(
+				new AttemptToUpdateUnassignedComponent(entity, DummyComponent)
 			);
 	});
 

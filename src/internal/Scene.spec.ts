@@ -1,4 +1,4 @@
-import { Scene, AttemptToGetResourceThatDoesNotExist, AttemptToAddResourceThatAlreadyExists, AttemptToRemoveResourceThatDoesNotExist, AttemptToAttachDuplicateScene, AttemptToDetachUnattachedScene, AttemptToCreateCircularReference, AttemptToAttachSceneToItself, AttemptToAttachSceneThatIsAlreadyAttachedElsewhere, AttemptToRegisterDuplicateSystem, AttemptToUnregisterUnknownSystem, AttemptToDestroyUnknownOrForeignEntity } from "./Scene";
+import { Scene, AttemptToGetResourceThatDoesNotExist, AttemptToAddResourceThatAlreadyExists, AttemptToRemoveResourceThatDoesNotExist, AttemptToAttachDuplicateScene, AttemptToDetachUnattachedScene, AttemptToCreateCircularReference, AttemptToAttachSceneToItself, AttemptToAttachSceneThatIsAlreadyAttachedElsewhere, AttemptToRegisterDuplicateSystem, AttemptToUnregisterUnknownSystem, AttemptToDestroyUnknownOrForeignEntity, AttemptToUpdateUnknownOrForeignEntity } from "./Scene";
 import { System } from "./System";
 import { Entity } from "./Entity";
 
@@ -690,7 +690,6 @@ describe(`Scene > Entity Management`, () => {
 		expect(scene.entities.exists(firstChild)).toBe(false);
 		expect(scene.entities.exists(secondChild)).toBe(false);
 		expect(scene.entities.exists(thirdChild)).toBe(false);
-	})
 	});
 
 	it(`removes entities from the update queue upon destruction`, () => {
@@ -730,5 +729,19 @@ describe(`Scene > Entity Management`, () => {
 		scene.execute(3);
 		expect(execute).toHaveBeenCalledTimes(2);
 		expect(execute).toHaveBeenLastCalledWith(entity);
+	});
+
+	it(`prevents destroyed entities from being updated`, () => {
+		class DummyComponent {}
+		const scene = new Scene();
+		const entity = scene.entities.create();
+
+		entity.add(DummyComponent);
+		scene.entities.destroy(entity);
+
+		expect(() => entity.remove(DummyComponent))
+			.toThrowError(
+				new AttemptToUpdateUnknownOrForeignEntity(scene, entity)
+			);
 	});
 });

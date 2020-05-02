@@ -161,9 +161,13 @@ export class Scene {
 
 	private readonly entitiesThatNeedTobeUpdated = new Set<Entity>();
 	private readonly entityUpdateQueue = (() => {
+		const self = this;
 		const queue = this.entitiesThatNeedTobeUpdated;
 
 		function queueForUpdate(entity: Entity) {
+			if (!self.entities.exists(entity)) {
+				throw new AttemptToUpdateUnknownOrForeignEntity(self, entity);
+			}
 			queue.add(entity);
 		}
 
@@ -380,6 +384,19 @@ export class AttemptToDestroyUnknownOrForeignEntity extends SceneError {
 	) {
 		super(
 			`Entity cannot be destroyed ` +
+			`by "${scene.constructor.name}", because ` +
+			`it was not created by "${scene.constructor.name}".`
+		);
+	}
+}
+
+export class AttemptToUpdateUnknownOrForeignEntity extends SceneError {
+	public constructor(
+		public readonly scene: Scene,
+		public readonly entity: Entity
+	) {
+		super(
+			`Entity cannot be updated ` +
 			`by "${scene.constructor.name}", because ` +
 			`it was not created by "${scene.constructor.name}".`
 		);

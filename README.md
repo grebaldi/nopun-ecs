@@ -16,7 +16,7 @@ A **system** manipulates component data by querying for entities based on their 
 
 With these concepts ECS allows for very efficient code reuse, because behaviors are not bound to specific classes, but emerge from a combination of atomic components and systems. This not only makes it easier to introduce new ideas to an existing game, but also to share code across multiple projects.
 
-nopun-ecs also introduces the concept of **scenes** on top of the ECS vocabulary. Scenes define a context boundary within which entities and systems exist (other ECS implementations might this `world`). Multiple scenes can be stitched together to form a tree structure, which allows for complexer game designs.
+nopun-ecs also introduces the concept of **scenes** on top of the ECS vocabulary. Scenes define a context boundary within which entities and systems exist (other ECS implementations might call this `world`). Multiple scenes can be stitched together to form a tree structure, which allows for complexer game designs.
 
 For more on the awesome ECS architecture, checkout the following article: https://medium.com/ingeniouslysimple/entities-components-and-systems-89c31464240d
 
@@ -151,7 +151,7 @@ class InputSystem extends System {
 
     // Every system can provide an `initialize` method, which will be called
     // whenever a system is registered to a scene. We'll use this method
-    // do register our DOM event handlers.
+    // to register our DOM event handlers.
     initialize() {
         document.addEventListener("keydown", (event: KeyboardEvent) => {
             // Add the pressed key to our set
@@ -164,7 +164,7 @@ class InputSystem extends System {
         });
     }
 
-    // Every system must provide an `execute` method. here's where we
+    // Every system must provide an `execute` method. Here's where we
     // implement our logic. `execute` is called on every frame in our
     // game, so at 60fps it is called 60 times per second.
     execute() {

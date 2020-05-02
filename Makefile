@@ -16,3 +16,7 @@ release::
 	@$(MAKE) test
 	@$(MAKE) build
 	@npm publish
+
+changelog::
+	@echo Changes since $$(git describe --tags $$(git rev-list --tags --max-count=1)):
+	@git --no-pager log --format="%C(auto) %h %s" $$(git describe --tags $$(git rev-list --tags --max-count=1))..HEAD

@@ -691,4 +691,44 @@ describe(`Scene > Entity Management`, () => {
 		expect(scene.entities.exists(secondChild)).toBe(false);
 		expect(scene.entities.exists(thirdChild)).toBe(false);
 	})
+	});
+
+	it(`removes entities from the update queue upon destruction`, () => {
+		const execute = jest.fn();
+		class DummyComponent {}
+		class OtherDummyComponent {}
+		class AddedComponent {}
+		class DummySystem extends System {
+			static queries = {
+				otherQuery: [OtherDummyComponent],
+				myQuery: [DummyComponent]
+			}
+
+			execute() {
+				for (const entity of this.queries.myQuery.all) {
+					execute(entity);
+					expect(this.scene.entities.exists(entity));
+				}
+			}
+		}
+		const scene = new Scene();
+		const entity = scene.entities.create().add(DummyComponent);
+
+		scene.systems.register(DummySystem);
+
+		scene.execute(1);
+		expect(execute).toHaveBeenCalledTimes(1);
+		expect(execute).toHaveBeenLastCalledWith(entity);
+
+		scene.execute(2);
+		expect(execute).toHaveBeenCalledTimes(2);
+		expect(execute).toHaveBeenLastCalledWith(entity);
+
+		entity.add(AddedComponent);
+
+		scene.entities.destroy(entity);
+		scene.execute(3);
+		expect(execute).toHaveBeenCalledTimes(2);
+		expect(execute).toHaveBeenLastCalledWith(entity);
+	});
 });

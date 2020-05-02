@@ -206,6 +206,8 @@ export class Scene {
 					query.writer.remove(entity);
 				}
 			}
+
+			self.entitiesThatNeedTobeUpdated.delete(entity);
 		}
 
 		return { create, exists, destroy };

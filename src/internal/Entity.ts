@@ -40,6 +40,10 @@ export class Entity {
 		return this;
 	}
 
+	public build(builderFn: (entity: this) => this): this {
+		return builderFn(this);
+	}
+
 	public remove(CC: ComponentConstructor): this {
 		if (!this.componentsStore.has(CC))
 			throw new AttemptToRemoveUnassignedComponent(this, CC);

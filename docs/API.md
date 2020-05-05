@@ -273,6 +273,22 @@ myEntity
 
 This method will throw an error on the attempt of updating a component that has not been added before.
 
+### `entity.build(builderFn: entity => entity): Component`
+
+This method applies the given builder function to the entity. It can be used to encapsulate construction logic for specific entities.
+
+**EXAMPLE**
+```typescript
+function makeBullet(entity: Entity) {
+    return entity
+        .add(Sprite, { source: 'bullet.png })
+        .add(Position2D, { x: 0, y: 0 });
+}
+
+scene.entities.create()
+    .build(makeBullet);
+```
+
 ### `entity.get(CC: ComponentConstructor): Component`
 
 The data of a component can be obtained via this method.

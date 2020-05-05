@@ -221,4 +221,16 @@ describe('Entity', () => {
 		expect(scene.debug.entities).toBe(3); // `entity` is not known to the scene in this case
 		expect(scene.entities.exists(thirdChild)).toBe(true);
 	});
+
+	it(`applies a given constructor function to itself`, () => {
+		const updateQueue = { queueForUpdate: jest.fn() }
+		const scene = new Scene();
+		const entity = new Entity(scene, updateQueue);
+		const makeSomething = jest.fn();
+
+		entity.build(makeSomething);
+
+		expect(makeSomething).toHaveBeenCalledTimes(1);
+		expect(makeSomething).toHaveBeenLastCalledWith(entity);
+	});
 });

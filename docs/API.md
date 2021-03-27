@@ -402,6 +402,10 @@ class MovementSystem extends System {
 }
 ```
 
+When a system is registered to a scene, nopun-ecs takes care of compiling the here defined queries, so that their results can be accessed during execution of the system.
+
+#### Filter Function `Not(...terms: (ComponentConstruct | FilterFn)[])`
+
 Negations can be expressed via the `Not`-function.
 
 **EXAMPLE:**
@@ -416,7 +420,43 @@ class MovementSystem extends System {
 }
 ```
 
-When a system is registered to a scene, nopun-ecs takes care of compiling the here defined queries, so that their results can be accessed during execution of the system.
+#### Filter Function `And(...terms: (ComponentConstruct | FilterFn)[])`
+
+Conjunctions can be expressed via the `And`-function.
+
+**EXAMPLE:**
+```typescript
+import { System, And, Not } from "nopun-ecs";
+
+class MovementSystem extends System {
+    static queries = {
+        movables: [And(Position, Velocity)],
+        immovables: [And(Position, Not(Velocity))]
+    };
+}
+```
+
+*Hint: `And` is automatically applied to the outer array of each query.*
+
+#### Filter Function `Or(...terms: (ComponentConstruct | FilterFn)[])`
+
+Disjunctions can be expressed via the `Or`-function.
+
+**EXAMPLE:**
+```typescript
+import { System, Or } from "nopun-ecs";
+
+class CollisionSystem extends System {
+    static queries = {
+        npcs: [CollisionShape, Or(Friend, Enemy)],
+        player: [CollisionShape, Player]
+    };
+}
+```
+
+#### Filter Function `Xor(...terms: (ComponentConstruct | FilterFn)[])`
+
+Exclusive disjunctions can be expressed via the `Xor`-function. This is in here more for completeness - I actually struggle to come up with a plausible example for its use. If you have one, please let me know :)
 
 ### `(system) this.initialize(): void`
 

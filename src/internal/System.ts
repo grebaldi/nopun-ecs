@@ -1,10 +1,10 @@
 import { Scene } from "./Scene";
-import { Filter } from "./Filter";
+import { Node } from "./Filter";
 import { Query, IQueryReader } from "./Query";
 
 export abstract class System {
 	static queries: {
-		[key: string]: Filter
+		[key: string]: Node[]
 	} = {};
 
 	public constructor(
@@ -27,7 +27,7 @@ export type SystemConstructor<S extends System = any> = {
 		}
 	): S
 	queries: {
-		[key: string]: Filter
+		[key: string]: Node[]
 	}
 }
 

@@ -1,6 +1,11 @@
-import * as webpack from "webpack";
+import { Configuration as WebpackConfiguration } from "webpack";
+import { Configuration as WebpackDevServerConfiguration } from "webpack-dev-server";
 
-const config: webpack.Configuration = {
+interface Configuration extends WebpackConfiguration {
+	devServer?: WebpackDevServerConfiguration;
+}
+
+const config: Configuration = {
 	devtool: 'source-map',
 	mode: 'development',
 	entry: ['./src/index.ts'],

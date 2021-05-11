@@ -4,10 +4,10 @@
   "author": "Wilhelm Behncke <wilhelm.behncke@protonmail.com>",
   "license": "MIT",
   "scripts": {
-    "dev": "next",
+    "dev": "NODE_ENV=development next",
     "build": "next build",
     "start": "next start",
-    "export": "yarn build && next export -o docs && touch docs/.nojekyll",
+    "export": "NODE_ENV=production yarn build && next export -o docs && touch docs/.nojekyll",
     "type-check": "tsc"
   },
   "dependencies": {

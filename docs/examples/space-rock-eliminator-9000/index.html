@@ -1,0 +1,49 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Pixi Project</title>
+    <script>
+        document.write(`
+            <style>
+                body {
+                    background-image:
+                        ${Array(300).fill(null).map(
+                            () => {
+                                const size = Math.round(Math.random() * 4);
+                                const color = ['#ff0', '#f30', '#0ff', '#fff', '#fff', '#fff'][Math.round(Math.random() * 5)];
+                                return `radial-gradient(${size}px ${size}px at ${Math.random() * 100}% ${Math.random() * 100}%, ${color}, rgba(0,0,0,0))`
+                            }
+                        ).join(',')};
+                }
+            </style>
+        `)
+    </script>
+    <style>
+        body {
+            padding: 0;
+            margin: 0;
+            -webkit-font-smoothing: none;
+            background-color: black;
+        }
+
+        #debug,
+        #app {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        #debug {
+            width: 100vw;
+            height: 100vh;
+        }
+    </style>
+</head>
+
+<body>
+    <section id="app"></section>
+    <canvas id="debug"></canvas>
+    <script type="text/javascript" src="main.js"></script>
+</body>
+</html>

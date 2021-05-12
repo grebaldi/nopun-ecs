@@ -1,0 +1,103 @@
+import {Card} from '@nopun-ecs/gh-pages-shared';
+import getConfig from 'next/config';
+const {publicRuntimeConfig: {publicFolder}} = getConfig();
+
+# nopun-ecs
+
+<p className="text-center">
+
+An Entity-Component-System implementation in Typescript with no pun in its package name
+
+</p>
+
+## Demos
+
+<div className="grid grid-cols-2 gap-8">
+
+<Card
+    title="Basic"
+    href={`${publicFolder}examples/basic/index.html`}
+    imageSrc={`${publicFolder}examples/basic/screenshot.png`}
+    imageAlt="Screenshot of Basic Example"
+>
+
+A very basic example that demonstrates how to move an object around the screen with the keyboard using [nopun-ecs](https://github.com/grebaldi/nopun-ecs) and plain DOM methods.
+
+</Card>
+
+<Card
+    title="Ultimate Space Rock Eliminator 9000"
+    href={`${publicFolder}examples/space-rock-eliminator-9000/index.html`}
+    imageSrc={`${publicFolder}examples/space-rock-eliminator-9000/screenshot.png`}
+    imageAlt="Screenshot of &quot;Ultimate Space Rock Eliminator 9000&quot;"
+>
+
+A web based clone of [Asteroids (1979)](https://en.wikipedia.org/wiki/Asteroids_(video_game)) built with [pixi.js](https://www.pixijs.com/) for graphics, [howler.js](https://howlerjs.com/) for sound and [nopun-ecs](https://github.com/grebaldi/nopun-ecs) for logic.
+
+</Card>
+
+</div>
+
+## Installation
+
+<article className="max-w-3xl mx-auto">
+
+With npm:
+
+```sh
+npm install --save nopun-ecs
+```
+
+With yarn:
+
+```sh
+yarn add nopun-ecs
+```
+
+**TypeScript:** nopun-ecs provides its own typescript type definitions.
+
+</article>
+
+## Documentation
+
+<article className="max-w-3xl mx-auto">
+
+You'll find a walkthrough of the basic example from above in the README of the main repository: <https://github.com/grebaldi/nopun-ecs#basic-usage>
+
+Furthermore, the repo also contains a full API documentation:  <https://github.com/grebaldi/nopun-ecs/blob/master/docs/API.md>
+
+</article>
+
+## Background
+
+<article className="max-w-3xl mx-auto">
+
+### What is ECS?
+
+ECS is short for Entity-Component-System, which is a popular, modern architectural pattern used in game development. At its core ECS is an object-oriented pattern, but it strongly favors composition over inheritance and separation of data from logic.
+
+A **component** is a simple data container. It can represent simple concepts like a position in 2D space, the player's health or something more complex like an RPG inventory. The important thing is, that it just holds data. ECS components are also not to be confused with React components or web components - the terms are radically different from each other.
+
+An **entity** is a distinct object in a game. This could be a character, an obstacle, a platform, a bullet - you name it. The entity is a container for a set of components. A character entity for example might consist of a position component, a sprite component and a velocity component. Entities are only references, they do not hold any data of their own.
+
+A **system** manipulates component data by querying for entities based on their components. Example: A system might query for anything that has a position component and a velocity component and then updates the position based on the velocity. The system is completely indifferent as to what the specific entities represent, it only cares for the components involved.
+
+With these concepts ECS allows for very efficient code reuse, because behaviors are not bound to specific classes, but emerge from a combination of atomic components and systems. This not only makes it easier to introduce new ideas to an existing game, but also to share code across multiple projects.
+
+nopun-ecs also introduces the concept of **scenes** on top of the ECS vocabulary. Scenes define a context boundary within which entities and systems exist (other ECS implementations might call this `world`). Multiple scenes can be stitched together to form a tree structure, which allows for complexer game designs.
+
+For more on the awesome ECS architecture, checkout the following article: <https://medium.com/ingeniouslysimple/entities-components-and-systems-89c31464240d>
+
+</article>
+
+## About this project
+
+<article className="max-w-3xl mx-auto">
+
+This is a pet project of mine. I started it as an excercise in software architecture, to see how well I could translate the theory of ECS into practice using my favorite language and platform.
+
+As of right now, I do not intend to use it in production. Therefore, I took no measures to make it cross-browser compatible and I rely heavily on ES2020 platform features, which probably makes it a non-starter for most contemporary professional use cases.
+
+I took a lot of inspiration from the [Mozilla ECSY](https://ecsy.io/) project, which you definitely should check out, if you plan on doing anything professional.
+
+</article>

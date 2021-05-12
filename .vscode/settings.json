@@ -1,0 +1,15 @@
+{
+    "deno.enable": false,
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "**/.next": true,
+        ".next": true,
+        "**/node_modules": true,
+        "node_modules": true
+    },
+    "explorerExclude.backup": {}
+}

@@ -1,32 +1,29 @@
 {
-  "prviate": true,
+  "name": "@nopun-ecs/gh-pages",
+  "private": true,
   "repository": "git@github.com:grebaldi/nopun-ecs.git",
   "author": "Wilhelm Behncke <wilhelm.behncke@protonmail.com>",
   "license": "MIT",
   "scripts": {
-    "dev": "NODE_ENV=development next",
-    "build": "next build",
-    "start": "next start",
-    "export": "NODE_ENV=production yarn build && next export -o docs && touch docs/.nojekyll",
-    "type-check": "tsc"
-  },
-  "dependencies": {
-    "@mdx-js/loader": "^1.6.22",
-    "@next/mdx": "^10.2.0",
-    "classnames": "^2.3.1",
-    "next": "^10.2.0",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2"
+    "dev": "lerna run --stream dev",
+    "build": "lerna run --stream build",
+    "start": "lerna run --stream start",
+    "export": "lerna run --stream export"
   },
   "devDependencies": {
+    "@types/mdx-js__react": "^1.5.3",
     "@types/react": "^17.0.5",
     "@types/react-dom": "^17.0.4",
     "autoprefixer": "^10.2.5",
+    "lerna": "^4.0.0",
+    "next-compose-plugins": "^2.2.1",
+    "next-transpile-modules": "^7.0.0",
     "postcss": "^8.2.15",
     "tailwindcss": "^2.1.2",
     "typescript": "^4.2.4"
   },
   "workspaces": [
-    "packages/**"
+    "packages/*",
+    "root"
   ]
 }

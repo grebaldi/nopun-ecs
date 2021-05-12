@@ -15,7 +15,7 @@ class MyDocument extends Document {
                     <link rel="shortcut icon" href="/nopun-ecs/static/favicon.svg"/>
                 </Head>
                 <body
-                    className="flex flex-col p-8 max-w-7xl mx-auto gap-16 bg-gradient-to-b from-gray-300 to-gray-100"
+                    className="bg-gradient-to-b from-gray-300 to-gray-100"
                 >
                     <a
                         className={cx(
@@ -42,7 +42,12 @@ class MyDocument extends Document {
                             Fork me on github
                         </span>
                     </a>
-                    <Main />
+                    <div className="flex flex-col p-8 max-w-7xl mx-auto gap-16">
+                        <Main />
+                    </div>
+                    <footer className="text-center bg-gray-800 p-6 text-gray-100">
+                            &copy; <a className="text-blue-200" target="_blank" rel="noreferrer noopener" href="https://github.com/grebaldi">Wilhelm Behncke</a> 2021
+                    </footer>
                     <NextScript />
                 </body>
             </Html>

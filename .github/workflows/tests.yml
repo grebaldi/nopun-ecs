@@ -1,7 +1,7 @@
-name: Unit Tests
+name: Tests
 on: [push, pull_request]
 jobs:
-  test:
+  integration-tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -10,7 +10,35 @@ jobs:
         with:
           node-version: '14'
       - run: yarn install
-      - run: yarn jest --verbose
+      - run: yarn jest test/ --verbose
+      - name: Tests ✅
+        if: ${{ success() }}
+        run: |
+          curl --request POST           --url https://api.github.com/repos/${{ github.repository }}/statuses/${{ github.sha }}           --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}'           --header 'content-type: application/json'           --data '{
+            "context": "tests",
+            "state": "success",
+            "description": "Tests passed",
+            "target_url": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          }'
+      - name: Tests 🚨
+        if: ${{ failure() }}
+        run: |
+          curl --request POST           --url https://api.github.com/repos/${{ github.repository }}/statuses/${{ github.sha }}           --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}'           --header 'content-type: application/json'           --data '{
+            "context": "tests",
+            "state": "failure",
+            "description": "Tests failed",
+            "target_url": "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          }'
+  unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Node.js v14
+        uses: actions/setup-node@v1
+        with:
+          node-version: '14'
+      - run: yarn install
+      - run: yarn jest src/ --verbose
       - name: Tests ✅
         if: ${{ success() }}
         run: |

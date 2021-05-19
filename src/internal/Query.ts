@@ -53,7 +53,9 @@ export class Query {
 					query.all.add(entity);
 					query.added.add(entity);
 				}
-			} else remove(entity);
+			} else if (query.all.has(entity)) {
+				remove(entity);
+			}
 		}
 
 		function remove(entity: Entity) {
@@ -61,8 +63,7 @@ export class Query {
 			query.added.delete(entity);
 			query.unchanged.delete(entity);
 
-			if(query.matches(entity))
-				query.removed.add(entity);
+			query.removed.add(entity);
 		}
 
 		function flush() {

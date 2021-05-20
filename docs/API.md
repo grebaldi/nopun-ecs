@@ -273,6 +273,18 @@ myEntity
 
 This method will throw an error on the attempt of updating a component that has not been added before.
 
+### `entity.put(CC: ComponentConstructor, value?: object): Entity`
+
+This method adds the given component if it has not been added before, otherwise it updates it.
+
+**EXAMPLE**
+```typescript
+myEntity
+    .put(My3DPositionComponent, {
+        x: 64
+    });
+```
+
 ### `entity.build(builderFn: entity => entity): Component`
 
 This method applies the given builder function to the entity. It can be used to encapsulate construction logic for specific entities.

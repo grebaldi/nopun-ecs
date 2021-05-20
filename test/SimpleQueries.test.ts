@@ -59,11 +59,7 @@ describe('Simple Queries', () => {
 			}
 
 			for (const entity of this.queries.withComponentsFooAndBar.removed) {
-				if (entity.has(Baz)) {
-					entity.update(Baz, {value: 'Foo and Bar were removed'});
-				} else {
-					entity.add(Baz, {value: 'Foo and Bar were removed'});
-				}
+				entity.put(Baz, {value: 'Foo and Bar were removed'});
 			}
 		}
 	}

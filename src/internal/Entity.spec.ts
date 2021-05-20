@@ -233,4 +233,37 @@ describe('Entity', () => {
 		expect(makeSomething).toHaveBeenCalledTimes(1);
 		expect(makeSomething).toHaveBeenLastCalledWith(entity);
 	});
+
+	it('provides a method to add or update components dependending on whether they are already set', () => {
+		const updateQueue = { queueForUpdate: jest.fn() }
+		const scene = new Scene();
+		const entity = new Entity(scene, updateQueue);
+
+		class Foo { value: string = 'foo' }
+
+		expect(entity.has(Foo)).toBe(false);
+
+		entity.put(Foo);
+		expect(entity.has(Foo)).toBe(true);
+		expect(entity.get(Foo).value).toBe('foo');
+
+		entity.remove(Foo);
+		expect(entity.has(Foo)).toBe(false);
+
+		entity.add(Foo);
+		expect(entity.has(Foo)).toBe(true);
+		expect(entity.get(Foo).value).toBe('foo');
+
+		entity.put(Foo);
+		expect(entity.has(Foo)).toBe(true);
+		expect(entity.get(Foo).value).toBe('foo');
+
+		entity.put(Foo, { value: 'bar' });
+		expect(entity.has(Foo)).toBe(true);
+		expect(entity.get(Foo).value).toBe('bar');
+
+		entity.put(Foo);
+		expect(entity.has(Foo)).toBe(true);
+		expect(entity.get(Foo).value).toBe('bar');
+	});
 });

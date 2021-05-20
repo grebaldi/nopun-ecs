@@ -40,6 +40,16 @@ export class Entity {
 		return this;
 	}
 
+	public put<C extends Component>(
+		CC: ComponentConstructor<C>,
+		overwriteValue: Partial<C> = {}
+	): this {
+		if (this.componentsStore.has(CC))
+			return this.update(CC, overwriteValue);
+
+		return this.add(CC, overwriteValue);
+	}
+
 	public build(builderFn: (entity: this) => this): this {
 		return builderFn(this);
 	}

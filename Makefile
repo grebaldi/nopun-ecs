@@ -1,10 +1,20 @@
 export PATH := ./node_modules/.bin:$(PATH)
 
+install::
+	@yarn
+
 build::
 	@tsc --project tsconfig.build.json
 
+test-unit::
+	@jest src --verbose
+
+test-integration::
+	@jest test --verbose
+
 test::
-	@jest --verbose
+	@$(MAKE) test-integration
+	@$(MAKE) test-unit
 
 prepare-release::
 	@sed -i 's/"version": ".*"/"version": "$(version)"/' package.json

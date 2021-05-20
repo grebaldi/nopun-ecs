@@ -266,4 +266,67 @@ describe('Entity', () => {
 		expect(entity.has(Foo)).toBe(true);
 		expect(entity.get(Foo).value).toBe('bar');
 	});
+
+	it('provides a method to manipulate components only if they are set', () => {
+		const updateQueue = { queueForUpdate: jest.fn() }
+		const scene = new Scene();
+		const entity = new Entity(scene, updateQueue);
+		let counter = 0;
+
+		class Foo { value: string = 'initial Foo' }
+
+		for (const [foo] of entity.take(Foo)) {
+			foo.value = 'next Foo';
+			counter++;
+		}
+
+		expect(counter).toBe(0);
+
+		entity.add(Foo);
+		for (const [foo] of entity.take(Foo)) {
+			foo.value = 'next Foo';
+			counter++;
+		}
+
+		expect(counter).toBe(1);
+		expect(entity.get(Foo).value).toBe('next Foo');
+	});
+
+	it('provides a method to manipulate multiple components only if all of them are set', () => {
+		const updateQueue = { queueForUpdate: jest.fn() }
+		const scene = new Scene();
+		const entity = new Entity(scene, updateQueue);
+		let counter = 0;
+
+		class Foo { value: string = 'initial Foo' }
+		class Bar { value: string = 'initial Bar' }
+
+		for (const [foo, bar] of entity.take(Foo, Bar)) {
+			foo.value = 'next Foo';
+			bar.value = 'next Bar';
+			counter++;
+		}
+
+		expect(counter).toBe(0);
+
+		entity.add(Foo);
+		for (const [foo, bar] of entity.take(Foo, Bar)) {
+			foo.value = 'next Foo';
+			bar.value = 'next Bar';
+			counter++;
+		}
+
+		expect(counter).toBe(0);
+
+		entity.add(Bar);
+		for (const [foo, bar] of entity.take(Foo, Bar)) {
+			foo.value = 'next Foo';
+			bar.value = 'next Bar';
+			counter++;
+		}
+
+		expect(counter).toBe(1);
+		expect(entity.get(Foo).value).toBe('next Foo');
+		expect(entity.get(Bar).value).toBe('next Bar');
+	});
 });

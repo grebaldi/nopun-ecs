@@ -323,6 +323,17 @@ if (myEntity.has(My3DPositionComponent)) {
 }
 ```
 
+### `entity.take(...CCs: ComponentConstructor[]): Generator<C[]>`
+
+This method will check for the existence of multiple components and will only yield a result, if all components are present.
+
+**EXAMPLE:**
+```typescript
+for (const [position, weight] of myEntity.take(My3DPositionComponent, Weight)) {
+    console.log('This entity is affected by gravity in 3D space.');
+}
+```
+
 ### `entity.remove(CC: ComponentConstructor): Entity`
 
 An existing component can be removed from an entity at any point during runtime.

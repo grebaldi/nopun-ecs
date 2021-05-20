@@ -1,4 +1,4 @@
-import { Filter, Negation } from "./Filter";
+import { And, Filter, Node } from "./Filter";
 import { Entity } from "./Entity";
 
 export interface IQueryWriter {
@@ -22,19 +22,14 @@ export class Query {
 	private readonly added = new Set<Entity>();
 	private readonly removed = new Set<Entity>();
 	private readonly unchanged = new Set<Entity>();
+	private readonly filter: Filter;
 
-	constructor(
-		private readonly filter: Filter
-	) {}
+	constructor(nodes: Node[]) {
+		this.filter = And(...nodes);
+	}
 
 	public matches(entity: Entity): boolean {
-		return this.filter.every(f => {
-			if (f instanceof Negation) {
-				return !entity.has(f.subject);
-			} else {
-				return entity.has(f);
-			}
-		});
+		return this.filter.filterFn(entity);
 	}
 
 	public readonly writer: IQueryWriter = (() => {

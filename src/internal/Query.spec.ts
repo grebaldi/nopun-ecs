@@ -1,6 +1,6 @@
 import { Entity } from "./Entity";
 import { Query } from "./Query";
-import { Not } from "./Filter";
+import { And, Not, Or, Xor } from "./Filter";
 import { Scene } from "./Scene";
 
 describe('Query > Writer', () => {
@@ -456,5 +456,71 @@ describe('Query > Filter', () => {
 		expect(query.matches(entity2)).toBe(false);
 		expect(query.matches(entity3)).toBe(false);
 		expect(query.matches(entity4)).toBe(false);
+	});
+
+	it('filters by conjunction', () => {
+		class DummyComponent1 { property = 'foo' }
+		class DummyComponent2 { property = 'bar' }
+		class DummyComponent3 { property = 'baz' }
+		const scene = new Scene();
+		const entity1 = new Entity(scene, { queueForUpdate: () => {} });
+		const entity2 = new Entity(scene, { queueForUpdate: () => {} });
+		const entity3 = new Entity(scene, { queueForUpdate: () => {} });
+		const entity4 = new Entity(scene, { queueForUpdate: () => {} });
+		const query = new Query([And(DummyComponent1, DummyComponent3)]);
+
+		entity1.add(DummyComponent1).add(DummyComponent2);
+		entity2.add(DummyComponent1).add(DummyComponent3);
+		entity3.add(DummyComponent2);
+		entity4.add(DummyComponent1).add(DummyComponent2).add(DummyComponent3);
+
+		expect(query.matches(entity1)).toBe(false);
+		expect(query.matches(entity2)).toBe(true);
+		expect(query.matches(entity3)).toBe(false);
+		expect(query.matches(entity4)).toBe(true);
+	});
+
+	it('filters by disjunction', () => {
+		class DummyComponent1 { property = 'foo' }
+		class DummyComponent2 { property = 'bar' }
+		class DummyComponent3 { property = 'baz' }
+		const scene = new Scene();
+		const entity1 = new Entity(scene, { queueForUpdate: () => {} });
+		const entity2 = new Entity(scene, { queueForUpdate: () => {} });
+		const entity3 = new Entity(scene, { queueForUpdate: () => {} });
+		const entity4 = new Entity(scene, { queueForUpdate: () => {} });
+		const query = new Query([Or(DummyComponent1, DummyComponent3)]);
+
+		entity1.add(DummyComponent1).add(DummyComponent2);
+		entity2.add(DummyComponent1).add(DummyComponent3);
+		entity3.add(DummyComponent2);
+		entity4.add(DummyComponent1).add(DummyComponent2).add(DummyComponent3);
+
+		expect(query.matches(entity1)).toBe(true);
+		expect(query.matches(entity2)).toBe(true);
+		expect(query.matches(entity3)).toBe(false);
+		expect(query.matches(entity4)).toBe(true);
+	});
+
+	it('filters by difference', () => {
+		class DummyComponent1 { property = 'foo' }
+		class DummyComponent2 { property = 'bar' }
+		class DummyComponent3 { property = 'baz' }
+		const scene = new Scene();
+		const entity1 = new Entity(scene, { queueForUpdate: () => {} });
+		const entity2 = new Entity(scene, { queueForUpdate: () => {} });
+		const entity3 = new Entity(scene, { queueForUpdate: () => {} });
+		const entity4 = new Entity(scene, { queueForUpdate: () => {} });
+		const query = new Query([Xor(DummyComponent1, DummyComponent3)]);
+
+		entity1.add(DummyComponent1).add(DummyComponent2);
+		entity2.add(DummyComponent1).add(DummyComponent3);
+		entity3.add(DummyComponent2);
+		entity4.add(DummyComponent2).add(DummyComponent3);
+
+		expect(query.matches(entity1)).toBe(true);
+		expect(query.matches(entity2)).toBe(false);
+		expect(query.matches(entity3)).toBe(false);
+		expect(query.matches(entity4)).toBe(true);
 	});
 });

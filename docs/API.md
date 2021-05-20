@@ -273,6 +273,18 @@ myEntity
 
 This method will throw an error on the attempt of updating a component that has not been added before.
 
+### `entity.put(CC: ComponentConstructor, value?: object): Entity`
+
+This method adds the given component if it has not been added before, otherwise it updates it.
+
+**EXAMPLE**
+```typescript
+myEntity
+    .put(My3DPositionComponent, {
+        x: 64
+    });
+```
+
 ### `entity.build(builderFn: entity => entity): Component`
 
 This method applies the given builder function to the entity. It can be used to encapsulate construction logic for specific entities.
@@ -308,6 +320,17 @@ This method will check whether the given component is attached to this entity.
 ```typescript
 if (myEntity.has(My3DPositionComponent)) {
     console.log('This entity has a position in 3D space.');
+}
+```
+
+### `entity.take(...CCs: ComponentConstructor[]): Generator<C[]>`
+
+This method will check for the existence of multiple components and will only yield a result, if all components are present.
+
+**EXAMPLE:**
+```typescript
+for (const [position, weight] of myEntity.take(My3DPositionComponent, Weight)) {
+    console.log('This entity is affected by gravity in 3D space.');
 }
 ```
 
@@ -379,6 +402,10 @@ class MovementSystem extends System {
 }
 ```
 
+When a system is registered to a scene, nopun-ecs takes care of compiling the here defined queries, so that their results can be accessed during execution of the system.
+
+#### Filter Function `Not(...terms: (ComponentConstruct | FilterFn)[])`
+
 Negations can be expressed via the `Not`-function.
 
 **EXAMPLE:**
@@ -393,7 +420,43 @@ class MovementSystem extends System {
 }
 ```
 
-When a system is registered to a scene, nopun-ecs takes care of compiling the here defined queries, so that their results can be accessed during execution of the system.
+#### Filter Function `And(...terms: (ComponentConstruct | FilterFn)[])`
+
+Conjunctions can be expressed via the `And`-function.
+
+**EXAMPLE:**
+```typescript
+import { System, And, Not } from "nopun-ecs";
+
+class MovementSystem extends System {
+    static queries = {
+        movables: [And(Position, Velocity)],
+        immovables: [And(Position, Not(Velocity))]
+    };
+}
+```
+
+*Hint: `And` is automatically applied to the outer array of each query.*
+
+#### Filter Function `Or(...terms: (ComponentConstruct | FilterFn)[])`
+
+Disjunctions can be expressed via the `Or`-function.
+
+**EXAMPLE:**
+```typescript
+import { System, Or } from "nopun-ecs";
+
+class CollisionSystem extends System {
+    static queries = {
+        npcs: [CollisionShape, Or(Friend, Enemy)],
+        player: [CollisionShape, Player]
+    };
+}
+```
+
+#### Filter Function `Xor(...terms: (ComponentConstruct | FilterFn)[])`
+
+Exclusive disjunctions can be expressed via the `Xor`-function. This is in here more for completeness - I actually struggle to come up with a plausible example for its use. If you have one, please let me know :)
 
 ### `(system) this.initialize(): void`
 

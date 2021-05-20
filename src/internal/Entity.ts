@@ -7,6 +7,8 @@ export interface IUpdateQueue {
 
 export class Entity {
 	private readonly componentsStore = new Map<ComponentConstructor, Component>();
+	private readonly componentsStoreHas = this.componentsStore.has.bind(this.componentsStore);
+	private readonly componentsStoreGet = this.componentsStore.get.bind(this.componentsStore);
 	constructor(
 		public readonly scene: Scene,
 		private readonly updateQueue: IUpdateQueue
@@ -40,6 +42,16 @@ export class Entity {
 		return this;
 	}
 
+	public put<C extends Component>(
+		CC: ComponentConstructor<C>,
+		overwriteValue: Partial<C> = {}
+	): this {
+		if (this.componentsStore.has(CC))
+			return this.update(CC, overwriteValue);
+
+		return this.add(CC, overwriteValue);
+	}
+
 	public build(builderFn: (entity: this) => this): this {
 		return builderFn(this);
 	}
@@ -62,6 +74,11 @@ export class Entity {
 			throw new AttemptToGetUnassignedComponent(this, CC);
 
 		return this.componentsStore.get(CC) as C;
+	}
+
+	public *take<C extends Component>(...CCs: ComponentConstructor<C>[]): Generator<C[]> {
+		if (CCs.every(this.componentsStoreHas))
+			yield CCs.map(this.componentsStoreGet) as C[];
 	}
 
 	private readonly childrenStore = new Set<Entity>();

@@ -15,7 +15,8 @@ const config: Configuration = {
 		filename: 'main.js'
 	},
 	devServer: {
-		contentBase: './dist'
+		// @ts-ignore
+		static: './dist'
 	},
 	module: {
 		rules: [

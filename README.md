@@ -3,6 +3,10 @@
 
 > An Entity-Component-System implementation in Typescript with no pun in its package name
 
+**Want a demo?** [Play now!](https://grebaldi.github.io/nopun-ecs/examples/space-rock-eliminator-9000/index.html)
+
+And here's the code: [examples/ultimate-space-rock-eliminator-9000](examples/ultimate-space-rock-eliminator-9000)
+
 ## Background
 
 ### What is ECS?

@@ -1,0 +1,30 @@
+{
+  "name": "nopun-ecs-ultimate-space-rock-eliminator-9000-example",
+  "version": "1.0.0",
+  "license": "MIT",
+  "scripts": {
+    "start": "webpack serve --mode development --open",
+    "build": "webpack --mode production",
+    "depcheck": "depcheck $(pwd) --ignore-bin-package --ignores='@types/*,ts-loader,file-loader'"
+  },
+  "devDependencies": {
+    "@types/howler": "^2.2.2",
+    "@types/node": "^14.14.33",
+    "@types/webpack": "^4.41.26",
+    "@types/webpack-dev-server": "^3.11.2",
+    "depcheck": "^1.4.0",
+    "file-loader": "^6.2.0",
+    "ts-loader": "^8.0.17",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.2.3",
+    "webpack": "^5.24.4",
+    "webpack-cli": "^4.5.0",
+    "webpack-dev-server": "^3.11.2"
+  },
+  "dependencies": {
+    "@types/pixi.js": "^5.0.0",
+    "detect-collisions": "^2.5.2",
+    "howler": "^2.2.1",
+    "pixi.js": "^6.0.0"
+  }
+}

@@ -1,0 +1,1 @@
+export { Asteroid, addAsteroidToScene, breakAsteroid } from "./Asteroid";

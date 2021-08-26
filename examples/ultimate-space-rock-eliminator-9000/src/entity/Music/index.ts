@@ -1,0 +1,1 @@
+export { addMusicToScene } from "./Music";

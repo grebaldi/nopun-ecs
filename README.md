@@ -1,4 +1,7 @@
-# nopun-ecs
+# <s>nopun-ecs</s>
+
+**ARCHIVED:** This repository has been moved here: https://codeberg.org/wbehncke/nopun-ecs
+
 ![Tests](https://github.com/grebaldi/nopun-ecs/actions/workflows/tests.yml/badge.svg?branch=master)
 
 > An Entity-Component-System implementation in Typescript with no pun in its package name
